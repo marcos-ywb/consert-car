@@ -10,6 +10,7 @@ import ChangePasswordScreen from "@/screens/auth/ChangePasswordScreen";
 import TabRoutes from "./TabRoutes";
 
 import NewCustomerScreen from "@/screens/app/NewCustomerScreen";
+import CustomerDetailsScreen from "@/screens/app/CustomerDetailsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,7 @@ function AppStack() {
             <Stack.Screen name="MainTabs" component={TabRoutes} />
 
             <Stack.Screen name="NewCustomer" component={NewCustomerScreen} />
+            <Stack.Screen name="CustomerDetails" component={CustomerDetailsScreen} />
         </Stack.Navigator>
     );
 }

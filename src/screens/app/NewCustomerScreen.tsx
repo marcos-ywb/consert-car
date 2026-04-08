@@ -107,7 +107,7 @@ export default function NewCustomerScreen() {
                     <View style={styles.sectionCard}>
                         <View style={styles.sectionHeader}>
                             <View style={styles.iconCircle}>
-                                <User size={20} color="#FFCC00" />
+                                <User size={20} color="#FFF" />
                             </View>
                             <Text style={styles.sectionTitle}>Dados do Proprietário</Text>
                         </View>
@@ -149,7 +149,7 @@ export default function NewCustomerScreen() {
                     <View style={styles.sectionCard}>
                         <View style={styles.sectionHeader}>
                             <View style={styles.iconCircle}>
-                                <Car size={20} color="#FFCC00" />
+                                <Car size={20} color="#FFF" />
                             </View>
                             <Text style={styles.sectionTitle}>Dados do Veículo</Text>
                         </View>

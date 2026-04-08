@@ -39,8 +39,12 @@ import { useNavigation } from "@react-navigation/native";
 import DropdownItem from "@/components/DropdownItem";
 import CustomInput from "@/components/CustomInput";
 
-const renderCustomer = ({ item }: any) => (
-    <TouchableOpacity style={styles.clientCard} activeOpacity={0.7}>
+const renderCustomer = ({ item, navigation }: any) => (
+    <TouchableOpacity
+        style={styles.clientCard}
+        activeOpacity={0.7}
+        onPress={() => navigation.navigate("CustomerDetails", { customerData: item })}
+    >
         <View style={styles.avatar}>
             <Text style={styles.avatarText}>{item.name.charAt(0)}</Text>
         </View>
@@ -89,7 +93,7 @@ const CLIENTS: any[] = [
     { id: '11', name: 'Kleber Nunes', phone: '(11) 88888-7777', lastVisit: 'Ontem', vehicles: 4 }
 ];
 
-export default function CustomerScreen() {
+export default function CustomersScreen() {
     const { user, signOut } = useAuth();
     const navigation = useNavigation();
 
@@ -184,7 +188,7 @@ export default function CustomerScreen() {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate("NewCustomer" as never)}
                     >
-                        <UserRoundPlus size={24} color="#FFCC00" />
+                        <UserPlus size={24} color="#FFF" />
                     </TouchableOpacity>
                 </View>
 
@@ -192,7 +196,7 @@ export default function CustomerScreen() {
                 <FlatList
                     data={filteredClients}
                     keyExtractor={item => item.id}
-                    renderItem={renderCustomer}
+                    renderItem={({ item }) => renderCustomer({ item, navigation })}
                     contentContainerStyle={[styles.listContent, { paddingBottom: 120 }]}
                     showsVerticalScrollIndicator={false}
                     ListHeaderComponent={

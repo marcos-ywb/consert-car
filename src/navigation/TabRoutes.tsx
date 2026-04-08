@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "@/screens/app/HomeScreen";
-import CustomerScreen from "@/screens/app/CustomerScreen";
+import CustomersScreen from "@/screens/app/CustomersScreen";
 import VehicleScreen from "@/screens/app/VehicleScreen";
 
 import { Home, User, Car, File, CalendarDays } from "lucide-react-native";
@@ -83,7 +83,7 @@ export default function TabRoutes() {
 
             <Tab.Screen
                 name="Clientes"
-                component={CustomerScreen}
+                component={CustomersScreen}
                 options={{
                     tabBarIcon: ({ color, focused }) => (
                         <TabItem Icon={User} color={color} focused={focused} />
