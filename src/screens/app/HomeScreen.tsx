@@ -28,10 +28,12 @@ import {
     ShieldCheck,
     LogOut,
     ChevronDown,
-    ChevronUp
+    ChevronUp,
+    Send
 } from "lucide-react-native";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigation } from "@react-navigation/native";
 
 import CustomCarousel from "@/components/CustomCarousel";
 import QuickAction from "@/components/QuickAction";
@@ -39,17 +41,60 @@ import AppointmentItem from "@/components/AppointmentItem";
 import AlertCard from "@/components/AlertCard";
 import DropdownItem from "@/components/DropdownItem";
 
+import CustomInput from "@/components/CustomInput";
+import Button from "@/components/Button";
+
+import { validateGeneralSearch, GeneralSearchErrors } from "@/utils/authValidation";
+
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 export default function HomeScreen() {
     const { user, signOut } = useAuth();
+    const navigation = useNavigation();
 
     const [menuVisible, setMenuVisible] = useState(false);
     const toggleMenu = () => setMenuVisible(!menuVisible);
 
     const [isExpanded, setIsExpanded] = useState(false);
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchVisible, setSearchVisible] = useState(false);
+
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState<GeneralSearchErrors>({});
+
+    const toggleSearchInput = () => {
+        setSearchVisible((prev) => {
+            if (prev) setSearchQuery("");
+            return !prev;
+        });
+    };
+
+    function sendSearch() {
+        setLoading(true);
+
+        try {
+            const validationErrors = validateGeneralSearch(searchQuery);
+
+            if (Object.keys(validationErrors).length > 0) {
+                setErrors(validationErrors);
+
+                setTimeout(() => {
+                    setErrors({});
+                }, 2500);
+
+                return;
+
+            }
+
+            alert(`Busca efetuada: ${searchQuery}`);
+
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const appointments = [
         { id: 1, time: "08:30", client: "João Silva", service: "Troca de óleo", car: "Gol 2015" },
@@ -141,7 +186,7 @@ export default function HomeScreen() {
                             <QuickAction
                                 icon={<UserPlus size={24} color="#111827" />}
                                 label="Cliente"
-                                onPress={() => alert("Cliente")}
+                                onPress={() => navigation.navigate("NewCustomer" as never)}
                             />
                             <QuickAction
                                 icon={<Car size={24} color="#111827" />}
@@ -151,9 +196,36 @@ export default function HomeScreen() {
                             <QuickAction
                                 icon={<Search size={24} color="#111827" />}
                                 label="Buscar"
-                                onPress={() => alert("Buscar")}
+                                onPress={toggleSearchInput}
                             />
                         </View>
+
+                        {searchVisible && (
+                            <View style={styles.searchField}>
+                                <View style={styles.inputField}>
+                                    <CustomInput
+                                        placeholder="Digite sua busca..."
+                                        onChangeText={setSearchQuery}
+                                        icon={<Search color="#64748B" size={20} />}
+                                        error={errors.search}
+                                    />
+                                </View>
+
+                                <View style={styles.buttonField}>
+                                    <Button
+                                        title="Buscar"
+                                        onPress={sendSearch}
+                                        variant="secondary"
+                                        icon={<Send size={20} color="#FFF" />}
+                                        loading={loading}
+                                        disabled={
+                                            loading ||
+                                            !searchQuery
+                                        }
+                                    />
+                                </View>
+                            </View>
+                        )}
                     </View>
 
                     <View style={styles.section}>
@@ -325,4 +397,17 @@ const styles = StyleSheet.create({
         color: '#111827',
     },
 
+    searchField: {
+        marginTop: 16,
+        width: '100%',
+    },
+
+    inputField: {
+        width: '100%',
+    },
+
+    buttonField: {
+        paddingTop: 8,
+        width: '100%',
+    }
 });

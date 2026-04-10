@@ -30,7 +30,8 @@ import {
     MessageCircle,
     UserRoundPlus,
     MessageCircleWarning,
-    X
+    X,
+    Plus
 } from "lucide-react-native";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -188,7 +189,7 @@ export default function CustomersScreen() {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate("NewCustomer" as never)}
                     >
-                        <UserPlus size={24} color="#FFF" />
+                        <Plus size={24} color="#FFF" />
                     </TouchableOpacity>
                 </View>
 

@@ -22,7 +22,7 @@ import {
     SquarePen,
     Trash2,
     Plus,
-    CarFront
+    CarFront,
 } from "lucide-react-native";
 
 import Button from "@/components/Button";
@@ -65,6 +65,11 @@ export default function CustomerDetailsScreen() {
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={styles.profileSection}>
+                        <View style={styles.idContainer}>
+                            <View style={styles.idBadge}>
+                                <Text style={styles.idText}>#{customerData.id}</Text>
+                            </View>
+                        </View>
                         <View style={styles.largeAvatar}>
                             <Text style={styles.avatarText}>{customerData.name.charAt(0)}</Text>
                         </View>
@@ -264,6 +269,25 @@ const styles = StyleSheet.create({
         marginBottom: 30
     },
 
+    idContainer: {
+        paddingBottom: 15
+    },
+
+    idBadge: {
+        backgroundColor: '#111827',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 8,
+        alignSelf: 'center',
+    },
+
+    idText: {
+        color: '#FFF',
+        fontSize: 12,
+        fontWeight: '800',
+        letterSpacing: 1,
+    },
+
     largeAvatar: {
         width: 80,
         height: 80,
@@ -322,6 +346,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 15,
+        marginBottom: 8
     },
 
     infoIconBg: {

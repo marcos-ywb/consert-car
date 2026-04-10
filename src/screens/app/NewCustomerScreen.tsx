@@ -93,7 +93,7 @@ export default function NewCustomerScreen() {
 
                     <View style={styles.headerTitleContainer}>
                         <Text style={styles.headerSubtitle}>Área de Cadastro</Text>
-                        <Text style={styles.headerTitle}>Novo Cliente</Text>
+                        <Text style={styles.headerTitle}>Criar Cadastro</Text>
                     </View>
 
                     <View style={{ width: 45 }} />

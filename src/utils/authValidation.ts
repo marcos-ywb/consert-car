@@ -30,6 +30,20 @@ export type NewCustomerErrors = {
     cor?: string;
 };
 
+export type GeneralSearchErrors = {
+    search?: string;
+};
+
+export function validateGeneralSearch(search: string): GeneralSearchErrors {
+    const errors: GeneralSearchErrors = {};
+
+    if (!search || search.trim() === "") {
+        errors.search = "Texto de busca é necessário!";
+    }
+
+    return errors;
+}
+
 export function validateLogin(
     email: string,
     password: string
