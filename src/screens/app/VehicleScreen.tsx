@@ -123,6 +123,8 @@ export default function VehicleScreen() {
         }
     };
 
+    const countVehicles = filteredVehicles.length;
+
     return (
         <SafeAreaView
             style={styles.safeArea}
@@ -209,9 +211,9 @@ export default function VehicleScreen() {
                     ListHeaderComponent={
                         <View style={styles.listHeader}>
                             <Text style={styles.resultsCount}>
-                                {VEHICLES.length === 0
-                                    ? "Nenhum cliente cadastrado"
-                                    : `Mostrando ${VEHICLES.length} clientes cadastrados`
+                                {countVehicles === 0
+                                    ? "Nenhum veículo cadastrado"
+                                    : `Mostrando ${countVehicles} veículo${countVehicles > 1 ? 's' : ''}`
                                 }
                             </Text>
                         </View>
@@ -373,13 +375,17 @@ const styles = StyleSheet.create({
     clientCard: {
         flexDirection: 'row',
         backgroundColor: '#FFF',
-        borderRadius: 16,
-        padding: 16,
+        borderRadius: 20,
+        padding: 15,
         marginBottom: 12,
+        alignItems: 'center',
         elevation: 2,
+        shadowColor: "#000",
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 4 },
         borderWidth: 1,
         borderColor: '#F1F5F9',
-        borderLeftWidth: 6,
     },
 
     avatar: {

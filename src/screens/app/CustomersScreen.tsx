@@ -42,13 +42,18 @@ import CustomInput from "@/components/CustomInput";
 
 const renderCustomer = ({ item, navigation }: any) => (
     <TouchableOpacity
-        style={styles.clientCard}
+        style={[
+            styles.clientCard,
+            { borderLeftColor: "#FFCC00" }
+        ]}
         activeOpacity={0.7}
         onPress={() => navigation.navigate("CustomerDetails", { customerData: item })}
     >
+        {/* 
         <View style={styles.avatar}>
             <Text style={styles.avatarText}>{item.name.charAt(0)}</Text>
         </View>
+        */}
 
         <View style={styles.clientInfo}>
             <Text style={styles.clientName}>{item.name}</Text>
@@ -116,6 +121,8 @@ export default function CustomersScreen() {
             setFilteredClients(filtered);
         }
     };
+
+    const countCustomers = filteredClients.length;
 
     return (
         <SafeAreaView
@@ -202,9 +209,9 @@ export default function CustomersScreen() {
                     ListHeaderComponent={
                         <View style={styles.listHeader}>
                             <Text style={styles.resultsCount}>
-                                {CLIENTS.length === 0
+                                {countCustomers === 0
                                     ? "Nenhum cliente cadastrado"
-                                    : `Mostrando ${CLIENTS.length} clientes cadastrados`
+                                    : `Mostando ${countCustomers} cliente${countCustomers > 1 ? 's' : ''}`
                                 }
                             </Text>
                         </View>

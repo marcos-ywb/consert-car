@@ -88,7 +88,10 @@ const renderAppointment = ({ item, navigation }: any) => {
 
     return (
         <TouchableOpacity
-            style={[styles.appointmentCard, { borderLeftColor: currentStatus.color }]}
+            style={[
+                styles.appointmentCard,
+                { borderLeftColor: currentStatus.color }
+            ]}
             activeOpacity={0.8}
             onPress={() => navigation.navigate("AppointmentDetails", { appointmentData: item })}
         >
@@ -138,6 +141,8 @@ export default function AppointmentsScreen() {
 
         return matchesSearch && matchesStatus;
     });
+
+    const countAppointments = filteredAppointments.length;
 
     return (
         <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -205,9 +210,10 @@ export default function AppointmentsScreen() {
                     ListHeaderComponent={
                         <View style={styles.listHeader}>
                             <Text style={styles.resultsCount}>
-                                {filteredAppointments.length === 0
-                                    ? "Nenhum resultado"
-                                    : `Mostrando ${filteredAppointments.length} agendamentos`
+                                {countAppointments === 0
+                                    ? "Nenhum agendamento cadastrado"
+                                    : `Mostrando ${countAppointments} agendamento${countAppointments > 1 ? 's' : ''}`
+
                                 }
                             </Text>
                         </View>
@@ -314,13 +320,16 @@ const styles = StyleSheet.create({
         flex: 1
     },
     userBtn: {
-        width: 56,
-        height: 56,
-        borderRadius: 12,
+        width: 60,
+        height: 60,
+        borderRadius: 8,
         backgroundColor: '#111827',
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 4,
+        shadowColor: "#000",
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
     },
     filterStatusField: {
         marginVertical: 10
@@ -370,13 +379,17 @@ const styles = StyleSheet.create({
     appointmentCard: {
         flexDirection: 'row',
         backgroundColor: '#FFF',
-        borderRadius: 16,
-        padding: 16,
+        borderRadius: 20,
+        padding: 15,
         marginBottom: 12,
+        alignItems: 'center',
         elevation: 2,
+        shadowColor: "#000",
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 4 },
         borderWidth: 1,
         borderColor: '#F1F5F9',
-        borderLeftWidth: 6,
     },
     appointmentInfo: {
         flex: 1
