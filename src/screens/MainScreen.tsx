@@ -1,10 +1,14 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Image, StyleSheet, Dimensions, Linking } from "react-native";
 import { LogIn } from "lucide-react-native";
 import Button from "@/components/Button";
 
 const { height } = Dimensions.get("window");
+
+const openLink = (url: string) => {
+    Linking.openURL(url);
+};
 
 export default function MainScreen() {
     const navigation = useNavigation();
@@ -25,7 +29,7 @@ export default function MainScreen() {
                 <View style={styles.fieldTexts}>
                     <Text style={styles.title}>Bem-vindo(a)!</Text>
                     <Text style={styles.subtitle}>
-                        Acesse sua conta para começar a utilizar a plataforma.
+                        Clique abaixo para acessar sua conta e começar a utilizar a plataforma.
                     </Text>
                 </View>
 
@@ -45,8 +49,29 @@ export default function MainScreen() {
 
                 <View style={styles.footer}>
                     <Text style={styles.versionText}>
-                        © 2026 • Design e Código por <Text style={styles.boldText}>Marcos Mello</Text>
+                        Idealização e Intermediação por{" "}
+                        <Text
+                            style={styles.linkText}
+                            onPress={() => openLink("https://github.com/jEFF-AS")}
+                        >
+                            Jeferson Santos
+                        </Text>
                     </Text>
+
+                    <Text style={styles.versionText}>
+                        Design e Código por{" "}
+                        <Text
+                            style={styles.linkText}
+                            onPress={() => openLink("https://github.com/marcos-ywb")}
+                        >
+                            Marcos Mello
+                        </Text>
+                    </Text>
+
+                    <Text style={[styles.versionText, { marginTop: 10 }]}>
+                        © 2026 • Todos os direitos reservados
+                    </Text>
+
                 </View>
             </View>
         </View>
@@ -95,6 +120,8 @@ const styles = StyleSheet.create({
     },
 
     fieldTexts: {
+        alignItems: "center",
+        justifyContent: "center",
         gap: 8,
     },
 
@@ -141,5 +168,11 @@ const styles = StyleSheet.create({
         color: "#453700",
         opacity: 0.4,
         fontWeight: "600",
+    },
+
+    linkText: {
+        fontWeight: "bold",
+        color: "#1A1A1A",
+        textDecorationLine: "underline",
     },
 });

@@ -42,19 +42,22 @@ import { COLORS } from "@/styles/theme";
 
 const renderVehicle = ({ item, navigation }: any) => (
     <TouchableOpacity
-        style={styles.clientCard} // Mantendo o estilo base do card
+        style={[
+            styles.clientCard,
+            { borderLeftColor: "#FFCC00" }
+        ]}
         activeOpacity={0.7}
         onPress={() => navigation.navigate("VehicleDetails", { vehicleData: item })}
     >
-        {/* Ícone ou Miniatura do Veículo */}
+        {/* 
         <View style={[styles.avatar, { backgroundColor: `${COLORS.primary.DEFAULT}10` }]}>
             <Car size={24} color={COLORS.primary.DEFAULT} />
         </View>
+        */}
 
         <View style={styles.clientInfo}>
             <Text style={styles.clientName}>{item.brand} {item.model}</Text>
 
-            {/* Placa do Veículo */}
             <View style={styles.clientSubInfo}>
                 <CreditCard size={14} color="#64748B" />
                 <Text style={[styles.clientPhone, { fontWeight: '700', color: '#334155' }]}>
@@ -62,7 +65,6 @@ const renderVehicle = ({ item, navigation }: any) => (
                 </Text>
             </View>
 
-            {/* Nome do Proprietário */}
             <View style={styles.clientSubInfo}>
                 <User size={14} color="#64748B" />
                 <Text style={styles.clientVehicles}>
@@ -72,7 +74,6 @@ const renderVehicle = ({ item, navigation }: any) => (
         </View>
 
         <View style={styles.cardActions}>
-            {/* Indicador de Status (opcional, ex: em manutenção) */}
             {item.inService && (
                 <View style={styles.statusBadge}>
                     <View style={styles.statusDot} />
@@ -346,7 +347,6 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         paddingHorizontal: 20,
         paddingTop: 20,
-        paddingBottom: 10,
         gap: 12,
         backgroundColor: '#F8F9FA',
     },
@@ -373,17 +373,13 @@ const styles = StyleSheet.create({
     clientCard: {
         flexDirection: 'row',
         backgroundColor: '#FFF',
-        borderRadius: 20,
-        padding: 15,
+        borderRadius: 16,
+        padding: 16,
         marginBottom: 12,
-        alignItems: 'center',
         elevation: 2,
-        shadowColor: "#000",
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 4 },
         borderWidth: 1,
         borderColor: '#F1F5F9',
+        borderLeftWidth: 6,
     },
 
     avatar: {

@@ -12,6 +12,9 @@ import TabRoutes from "./TabRoutes";
 import NewCustomerScreen from "@/screens/app/NewCustomerScreen";
 import CustomerDetailsScreen from "@/screens/app/CustomerDetailsScreen";
 
+import NewAppointmentScreen from "@/screens/app/NewAppointmentScreen";
+import AppointmentDetailsScreen from "@/screens/app/AppointmentDetailsScreen";
+
 const Stack = createNativeStackNavigator();
 
 function AuthStack() {
@@ -39,6 +42,9 @@ function AppStack() {
 
             <Stack.Screen name="NewCustomer" component={NewCustomerScreen} />
             <Stack.Screen name="CustomerDetails" component={CustomerDetailsScreen} />
+
+            <Stack.Screen name="NewAppointment" component={NewAppointmentScreen} />
+            <Stack.Screen name="AppointmentDetails" component={AppointmentDetailsScreen} />
         </Stack.Navigator>
     );
 }

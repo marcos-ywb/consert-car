@@ -52,38 +52,6 @@ export default function ChangePasswordScreen() {
         }
     }
 
-    const iniciaisNome = user?.name
-        ?.trim()
-        .split(/\s+/)
-        .map((n) => n[0])
-        .slice(0, 2)
-        .join("")
-        .toUpperCase();
-
-    function stringToColor(name: string): string {
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        let color = "#";
-        for (let i = 0; i < 3; i++) {
-            const value = (hash >> (i * 8)) & 0xff;
-            color += value.toString(16).padStart(2, "0");
-        }
-        return color;
-    }
-
-    function getTextColor(bgColor: string) {
-        const r = parseInt(bgColor.substr(1, 2), 16);
-        const g = parseInt(bgColor.substr(3, 2), 16);
-        const b = parseInt(bgColor.substr(5, 2), 16);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        return brightness > 128 ? "#000" : "#FFF";
-    }
-
-    const color = useMemo(() => stringToColor(user?.name || ""), [user?.name]);
-    const colorText = useMemo(() => getTextColor(color), [color]);
-
     return (
         <SafeAreaView style={styles.safeArea} edges={["top"]}>
             <KeyboardAvoidingView
@@ -96,18 +64,15 @@ export default function ChangePasswordScreen() {
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={styles.header}>
-                        <View style={{ width: 50 }} />
+
 
                         <View style={styles.headerTitleContainer}>
                             <Text style={styles.headerSubtitle}>Segurança</Text>
                             <Text style={styles.headerTitle}>Nova Senha</Text>
                         </View>
 
-                        <View style={[styles.profileCircle, { backgroundColor: color }]}>
-                            <Text style={[styles.initialsText, { color: colorText }]}>
-                                {iniciaisNome}
-                            </Text>
-                        </View>
+
+
                     </View>
 
                     <View style={styles.alertWrapper}>
@@ -181,7 +146,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         paddingHorizontal: 15,
         paddingVertical: 15,
     },

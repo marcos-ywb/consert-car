@@ -8,6 +8,7 @@ import {
     KeyboardAvoidingView,
     Platform
 } from "react-native";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { validateNewCustomer, NewCustomerErrors } from "@/utils/authValidation";
@@ -77,11 +78,15 @@ export default function NewCustomerScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.safeArea} edges={["top"]}>
+        <View style={styles.container}>
+
+            <SafeAreaView style={styles.safeAreaTop} edges={["top"]} />
+
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
+
                 <View style={styles.header}>
                     <TouchableOpacity
                         style={styles.backBtn}
@@ -99,142 +104,151 @@ export default function NewCustomerScreen() {
                     <View style={{ width: 45 }} />
                 </View>
 
-                <ScrollView
-                    style={styles.scrollView}
-                    contentContainerStyle={styles.scrollContent}
-                    showsVerticalScrollIndicator={false}
-                >
-                    <View style={styles.sectionCard}>
-                        <View style={styles.sectionHeader}>
-                            <View style={styles.iconCircle}>
-                                <User size={20} color="#FFF" />
+                <View style={{ backgroundColor: '#FFCC00', flex: 1 }}>
+                    <ScrollView
+                        style={styles.scrollView}
+                        bounces={false}
+                        overScrollMode="never"
+                        contentContainerStyle={styles.scrollContent}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <View style={styles.sectionCard}>
+                            <View style={styles.sectionHeader}>
+                                <View style={styles.iconCircle}>
+                                    <User size={20} color="#FFF" />
+                                </View>
+                                <Text style={styles.sectionTitle}>Dados do Proprietário</Text>
                             </View>
-                            <Text style={styles.sectionTitle}>Dados do Proprietário</Text>
+
+                            <CustomInput
+                                label="Nome Completo"
+                                placeholder="João Silva"
+                                autoCapitalize="words"
+                                value={userData.name}
+                                onChangeText={(text) => handleUserChange("name", text)}
+                                error={errors.name}
+                            />
+
+                            <View style={styles.row}>
+                                <View style={styles.flex1}>
+                                    <CustomInput
+                                        label="Telefone"
+                                        placeholder="(11) 99999-9999"
+                                        keyboardType="phone-pad"
+                                        value={userData.phone}
+                                        onChangeText={(text) => handleUserChange("phone", text)}
+                                        error={errors.phone}
+                                    />
+                                </View>
+
+                                <View style={styles.flex1}>
+                                    <CustomInput
+                                        label="CPF"
+                                        placeholder="000.000.000-00"
+                                        keyboardType="numeric"
+                                        value={userData.cpf}
+                                        onChangeText={(text) => handleUserChange("cpf", text)}
+                                        error={errors.cpf}
+                                    />
+                                </View>
+                            </View>
                         </View>
 
-                        <CustomInput
-                            label="Nome Completo"
-                            placeholder="João Silva"
-                            autoCapitalize="words"
-                            value={userData.name}
-                            onChangeText={(text) => handleUserChange("name", text)}
-                            error={errors.name}
+                        <View style={styles.sectionCard}>
+                            <View style={styles.sectionHeader}>
+                                <View style={styles.iconCircle}>
+                                    <Car size={20} color="#FFF" />
+                                </View>
+                                <Text style={styles.sectionTitle}>Dados do Veículo</Text>
+                            </View>
+
+                            <View style={styles.row}>
+                                <View style={styles.flex1}>
+                                    <CustomInput
+                                        label="Marca"
+                                        placeholder="Honda"
+                                        value={vehicleData.marca}
+                                        onChangeText={(text) => handleVehicleChange("marca", text)}
+                                        error={errors.marca}
+                                    />
+                                </View>
+                                <View style={styles.flex1}>
+                                    <CustomInput
+                                        label="Modelo"
+                                        placeholder="Civic"
+                                        value={vehicleData.modelo}
+                                        onChangeText={(text) => handleVehicleChange("modelo", text)}
+                                        error={errors.modelo}
+                                    />
+                                </View>
+                            </View>
+
+                            <View style={styles.row}>
+                                <View style={{ flex: 2 }}>
+                                    <CustomInput
+                                        label="Placa"
+                                        placeholder="BRA2E19"
+                                        autoCapitalize="characters"
+                                        value={vehicleData.placa}
+                                        onChangeText={(text) => handleVehicleChange("placa", text)}
+                                        error={errors.placa}
+                                    />
+                                </View>
+                                <View style={{ flex: 1.5 }}>
+                                    <CustomInput
+                                        label="Ano"
+                                        placeholder="2022"
+                                        keyboardType="numeric"
+                                        value={vehicleData.ano}
+                                        onChangeText={(text) => handleVehicleChange("ano", text)}
+                                        error={errors.ano}
+                                    />
+                                </View>
+                            </View>
+
+                            <CustomInput
+                                label="Cor"
+                                placeholder="Preto Fosco"
+                                value={vehicleData.cor}
+                                onChangeText={(text) => handleVehicleChange("cor", text)}
+                                error={errors.cor}
+                            />
+                        </View>
+
+                        <Button
+                            title="Salvar"
+                            onPress={handleSaveCustomer}
+                            variant="secondary"
+                            loading={loading}
+                            disabled={
+                                loading ||
+                                !userData.name ||
+                                !userData.phone ||
+                                !userData.cpf ||
+                                !vehicleData.marca ||
+                                !vehicleData.modelo ||
+                                !vehicleData.placa ||
+                                !vehicleData.ano ||
+                                !vehicleData.cor
+                            }
+                            icon={<Save size={22} color="#FFF" />}
+                            iconPosition="left"
                         />
-
-                        <View style={styles.row}>
-                            <View style={styles.flex1}>
-                                <CustomInput
-                                    label="Telefone"
-                                    placeholder="(11) 99999-9999"
-                                    keyboardType="phone-pad"
-                                    value={userData.phone}
-                                    onChangeText={(text) => handleUserChange("phone", text)}
-                                    error={errors.phone}
-                                />
-                            </View>
-
-                            <View style={styles.flex1}>
-                                <CustomInput
-                                    label="CPF"
-                                    placeholder="000.000.000-00"
-                                    keyboardType="numeric"
-                                    value={userData.cpf}
-                                    onChangeText={(text) => handleUserChange("cpf", text)}
-                                    error={errors.cpf}
-                                />
-                            </View>
-                        </View>
-                    </View>
-
-                    <View style={styles.sectionCard}>
-                        <View style={styles.sectionHeader}>
-                            <View style={styles.iconCircle}>
-                                <Car size={20} color="#FFF" />
-                            </View>
-                            <Text style={styles.sectionTitle}>Dados do Veículo</Text>
-                        </View>
-
-                        <View style={styles.row}>
-                            <View style={styles.flex1}>
-                                <CustomInput
-                                    label="Marca"
-                                    placeholder="Honda"
-                                    value={vehicleData.marca}
-                                    onChangeText={(text) => handleVehicleChange("marca", text)}
-                                    error={errors.marca}
-                                />
-                            </View>
-                            <View style={styles.flex1}>
-                                <CustomInput
-                                    label="Modelo"
-                                    placeholder="Civic"
-                                    value={vehicleData.modelo}
-                                    onChangeText={(text) => handleVehicleChange("modelo", text)}
-                                    error={errors.modelo}
-                                />
-                            </View>
-                        </View>
-
-                        <View style={styles.row}>
-                            <View style={{ flex: 2 }}>
-                                <CustomInput
-                                    label="Placa"
-                                    placeholder="BRA2E19"
-                                    autoCapitalize="characters"
-                                    value={vehicleData.placa}
-                                    onChangeText={(text) => handleVehicleChange("placa", text)}
-                                    error={errors.placa}
-                                />
-                            </View>
-                            <View style={{ flex: 1.5 }}>
-                                <CustomInput
-                                    label="Ano"
-                                    placeholder="2022"
-                                    keyboardType="numeric"
-                                    value={vehicleData.ano}
-                                    onChangeText={(text) => handleVehicleChange("ano", text)}
-                                    error={errors.ano}
-                                />
-                            </View>
-                        </View>
-
-                        <CustomInput
-                            label="Cor"
-                            placeholder="Preto Fosco"
-                            value={vehicleData.cor}
-                            onChangeText={(text) => handleVehicleChange("cor", text)}
-                            error={errors.cor}
-                        />
-                    </View>
-
-                    <Button
-                        title="Salvar"
-                        onPress={handleSaveCustomer}
-                        variant="secondary"
-                        loading={loading}
-                        disabled={
-                            loading ||
-                            !userData.name ||
-                            !userData.phone ||
-                            !userData.cpf ||
-                            !vehicleData.marca ||
-                            !vehicleData.modelo ||
-                            !vehicleData.placa ||
-                            !vehicleData.ano ||
-                            !vehicleData.cor
-                        }
-                        icon={<Save size={22} color="#FFF" />}
-                        iconPosition="left"
-                    />
-                </ScrollView>
+                    </ScrollView>
+                </View>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+
+            <SafeAreaView style={{ backgroundColor: "#F8F9FA" }} edges={["bottom"]} />
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
+    container: {
         flex: 1,
+        backgroundColor: "#F8F9FA",
+    },
+    safeAreaTop: {
         backgroundColor: "#FFCC00",
     },
     header: {
@@ -273,10 +287,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#F8F9FA",
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
+        overflow: 'hidden',
     },
     scrollContent: {
         padding: 20,
         paddingBottom: 40,
+        minHeight: '100%',
     },
     sectionCard: {
         backgroundColor: '#FFF',
@@ -317,25 +333,5 @@ const styles = StyleSheet.create({
     },
     flex1: {
         flex: 1,
-    },
-    saveButton: {
-        backgroundColor: '#FFCC00',
-        height: 60,
-        borderRadius: 18,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 12,
-        marginTop: 10,
-        elevation: 6,
-        shadowColor: '#FFCC00',
-        shadowOpacity: 0.3,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 4 },
-    },
-    saveButtonText: {
-        fontSize: 18,
-        fontWeight: '800',
-        color: '#111827',
     }
 });

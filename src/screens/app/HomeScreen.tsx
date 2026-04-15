@@ -180,7 +180,7 @@ export default function HomeScreen() {
                             <QuickAction
                                 icon={<CalendarPlus size={24} color="#111827" />}
                                 label="Agenda"
-                                onPress={() => alert("Agenda")}
+                                onPress={() => navigation.navigate("NewAppointment" as never)}
                             />
 
                             <QuickAction

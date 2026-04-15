@@ -84,7 +84,6 @@ const renderCustomer = ({ item, navigation }: any) => (
 );
 
 const CLIENTS: any[] = [
-    { id: "1", name: "Glenda Helena", phone: "(38) 99958-0668", lastVisit: "Ontem", vehicles: 1 },
     { id: '2', name: 'Bruno Santos', phone: '(11) 98888-7777', lastVisit: '05 Nov 2023', vehicles: 1 },
     { id: '4', name: 'Diego Ferreira', phone: '(11) 96666-5555', lastVisit: 'Pendente', vehicles: 0 },
     { id: '5', name: 'Lucas Almeida', phone: '(11) 95555-4444', lastVisit: 'Ontem', vehicles: 2 },
@@ -334,7 +333,6 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         paddingHorizontal: 20,
         paddingTop: 20,
-        paddingBottom: 10,
         gap: 12,
         backgroundColor: '#F8F9FA',
     },
