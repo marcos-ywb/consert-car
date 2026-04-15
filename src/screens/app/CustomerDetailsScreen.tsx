@@ -27,6 +27,19 @@ import {
 
 import Button from "@/components/Button";
 
+const getInitials = (name: string) => {
+    const parts = name.trim().split(' ');
+
+    if (parts.length === 1) {
+        return parts[0].charAt(0).toUpperCase();
+    }
+
+    const firstInitial = parts[0].charAt(0);
+    const lastInitial = parts[parts.length - 1].charAt(0);
+
+    return (firstInitial + lastInitial).toUpperCase();
+};
+
 export default function CustomerDetailsScreen() {
     const route = useRoute();
     const navigation = useNavigation();
@@ -71,7 +84,7 @@ export default function CustomerDetailsScreen() {
                             </View>
                         </View>
                         <View style={styles.largeAvatar}>
-                            <Text style={styles.avatarText}>{customerData.name.charAt(0)}</Text>
+                            <Text style={styles.avatarText}>{getInitials(customerData.name)}</Text>
                         </View>
                         <Text style={styles.name}>{customerData.name}</Text>
                         <Text style={styles.lastVisit}>Última visita: {customerData.lastVisit}</Text>
