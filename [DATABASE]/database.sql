@@ -23,6 +23,7 @@ CREATE TABLE clientes(
     cliente_id INT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(255) NOT NULL,
     telefone CHAR(11),
+    cpf CHAR(11) NOT NULL UNIQUE,
 
     PRIMARY KEY(cliente_id)
 );
@@ -32,6 +33,7 @@ CREATE TABLE enderecos(
 
     cliente_id INT NOT NULL,
 
+    cep CHAR(8) NOT NULL,
     logradouro VARCHAR(255) NOT NULL,
     numero INT NOT NULL,
     bairro VARCHAR(255) NOT NULL,

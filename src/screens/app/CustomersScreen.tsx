@@ -89,13 +89,13 @@ const renderCustomer = ({ item, navigation }: any) => (
 );
 
 const CLIENTS: any[] = [
-    { id: '2', name: 'Bruno Santos', phone: '(11) 98888-7777', lastVisit: '05 Nov 2023', vehicles: 1 },
-    { id: '4', name: 'Diego Ferreira', phone: '(11) 96666-5555', lastVisit: 'Pendente', vehicles: 0 },
-    { id: '5', name: 'Lucas Almeida', phone: '(11) 95555-4444', lastVisit: 'Ontem', vehicles: 2 },
-    { id: '7', name: 'Gabriel Mendes', phone: '(11) 93333-2222', lastVisit: 'Ontem', vehicles: 2 },
-    { id: '9', name: 'Igor Silva', phone: '(11) 91111-0000', lastVisit: 'Ontem', vehicles: 2 },
-    { id: '10', name: 'Joaquim Oliveira', phone: '(11) 90000-9999', lastVisit: 'Ontem', vehicles: 0 },
-    { id: '11', name: 'Kleber Nunes', phone: '(11) 88888-7777', lastVisit: 'Ontem', vehicles: 4 }
+    { id: '2', name: 'Bruno Santos', phone: '(11) 98888-7777', lastVisit: '05 Nov 2023', vehicles: 1, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
+    { id: '4', name: 'Diego Ferreira', phone: '(11) 96666-5555', lastVisit: 'Pendente', vehicles: 0, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
+    { id: '5', name: 'Lucas Almeida', phone: '(11) 95555-4444', lastVisit: 'Ontem', vehicles: 2, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
+    { id: '7', name: 'Gabriel Mendes', phone: '(11) 93333-2222', lastVisit: 'Ontem', vehicles: 2, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
+    { id: '9', name: 'Igor Silva', phone: '(11) 91111-0000', lastVisit: 'Ontem', vehicles: 2, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
+    { id: '10', name: 'Joaquim Oliveira', phone: '(11) 90000-9999', lastVisit: 'Ontem', vehicles: 0, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
+    { id: '11', name: 'Kleber Nunes', phone: '(11) 88888-7777', lastVisit: 'Ontem', vehicles: 4, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
 ];
 
 export default function CustomersScreen() {

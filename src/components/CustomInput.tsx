@@ -52,6 +52,7 @@ export default function CustomInput({
                     placeholderTextColor={error ? "red" : "#DDD8D7"}
                     secureTextEntry={isPassword && !showPassword}
                     autoCapitalize="none"
+                    value={rest.value ?? ""}
                     {...rest}
                 />
 

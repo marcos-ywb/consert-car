@@ -17,7 +17,8 @@ import {
     ChevronLeft,
     User,
     Car,
-    Save
+    Save,
+    MapPinned
 } from "lucide-react-native";
 
 import CustomInput from "@/components/CustomInput";
@@ -40,14 +41,40 @@ export default function NewCustomerScreen() {
         cor: ""
     });
 
+    const [addressData, setAddressData] = useState({
+        cep: "",
+        estado: "",
+        logradouro: "",
+        numero: "",
+        bairro: "",
+        cidade: "",
+        complemento: ""
+    });
+
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<NewCustomerErrors>({});
 
-    const handleUserChange = (field: any, value: any) => {
-        setUserData(prev => ({
-            ...prev,
-            [field]: value
-        }));
+    const handleUserChange = (field: string, value: string) => {
+        let formattedValue = value;
+
+        if (field === "phone") {
+            formattedValue = value
+                .replace(/\D/g, "")
+                .replace(/(\d{2})(\d)/, "($1) $2")
+                .replace(/(\d{5})(\d)/, "$1-$2")
+                .substring(0, 15);
+        }
+
+        if (field === "cpf") {
+            formattedValue = value
+                .replace(/\D/g, "")
+                .replace(/(\d{3})(\d)/, "$1.$2")
+                .replace(/(\d{3})(\d)/, "$1.$2")
+                .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+                .substring(0, 14);
+        }
+
+        setUserData(prev => ({ ...prev, [field]: formattedValue }));
     };
 
     const handleVehicleChange = (field: any, value: any) => {
@@ -57,11 +84,24 @@ export default function NewCustomerScreen() {
         }));
     };
 
+    const handleAddressChange = (field: any, value: any) => {
+        let formattedValue = value;
+
+        if (field === "cep") {
+            formattedValue = value
+                .replace(/\D/g, "")
+                .replace(/(\d{5})(\d)/, "$1-$2")
+                .substring(0, 9);
+        }
+
+        setAddressData(prev => ({ ...prev, [field]: formattedValue }));
+    };
+
     function handleSaveCustomer() {
         setLoading(true);
 
         try {
-            const validationErrors = validateNewCustomer(userData, vehicleData);
+            const validationErrors = validateNewCustomer(userData, vehicleData, addressData);
 
             if (Object.keys(validationErrors).length > 0) {
                 setErrors(validationErrors);
@@ -152,6 +192,87 @@ export default function NewCustomerScreen() {
                                     />
                                 </View>
                             </View>
+
+
+                            <View style={styles.sectionHeader}>
+                                <View style={styles.iconCircle}>
+                                    <MapPinned size={20} color="#FFF" />
+                                </View>
+                                <Text style={styles.sectionTitle}>Endereço do Proprietário</Text>
+                            </View>
+
+                            <View style={styles.row}>
+                                <View style={{ flex: 2 }}>
+                                    <CustomInput
+                                        label="CEP"
+                                        placeholder="00000-000"
+                                        keyboardType="numeric"
+                                        value={addressData.cep}
+                                        onChangeText={(text) => handleAddressChange("cep", text)}
+                                        error={errors.cep}
+                                    />
+                                </View>
+
+                                <View style={{ flex: 1 }}>
+                                    <CustomInput
+                                        label="UF"
+                                        placeholder="MG"
+                                        autoCapitalize="characters"
+                                        maxLength={2}
+                                        value={addressData.estado}
+                                        onChangeText={(text) => handleAddressChange("estado", text)}
+                                        error={errors.estado}
+                                    />
+                                </View>
+                            </View>
+
+
+                            <CustomInput
+                                label="Logradouro"
+                                placeholder="Rua, Avenida, etc"
+                                value={addressData.logradouro}
+                                onChangeText={(text) => handleAddressChange("logradouro", text)}
+                                error={errors.logradouro}
+                            />
+
+                            <View style={styles.row}>
+                                <View style={{ flex: 1 }}>
+                                    <CustomInput
+                                        label="Nº"
+                                        placeholder="123"
+                                        keyboardType="numeric"
+                                        value={addressData.numero}
+                                        onChangeText={(text) => handleAddressChange("numero", text)}
+                                        error={errors.numero}
+                                    />
+                                </View>
+
+                                <View style={{ flex: 2 }}>
+                                    <CustomInput
+                                        label="Bairro"
+                                        placeholder="Centro"
+                                        value={addressData.bairro}
+                                        onChangeText={(text) => handleAddressChange("bairro", text)}
+                                        error={errors.bairro}
+                                    />
+                                </View>
+                            </View>
+
+                            <CustomInput
+                                label="Cidade"
+                                placeholder="Cidade"
+                                value={addressData.cidade}
+                                onChangeText={(text) => handleAddressChange("cidade", text)}
+                                error={errors.cidade}
+                            />
+
+                            <CustomInput
+                                label="Complemento"
+                                placeholder="Apto, Bloco, Casa..."
+                                value={addressData.complemento}
+                                onChangeText={(text) => handleAddressChange("complemento", text)}
+                            />
+
                         </View>
 
                         <View style={styles.sectionCard}>
@@ -225,6 +346,9 @@ export default function NewCustomerScreen() {
                                 !userData.name ||
                                 !userData.phone ||
                                 !userData.cpf ||
+                                !addressData.cep ||
+                                !addressData.logradouro ||
+                                !addressData.estado ||
                                 !vehicleData.marca ||
                                 !vehicleData.modelo ||
                                 !vehicleData.placa ||

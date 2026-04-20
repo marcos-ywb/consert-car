@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "@/screens/app/HomeScreen";
 import CustomersScreen from "@/screens/app/CustomersScreen";
-import VehicleScreen from "@/screens/app/VehicleScreen";
+import VehiclesScreen from "@/screens/app/VehiclesScreen";
 import AppointmentsScreen from "@/screens/app/AppointmentsScreen";
 import ServiceOrdersScreen from "@/screens/app/ServiceOrdersScreen";
 import AdminScreen from "@/screens/app/AdminScreen";
@@ -135,7 +135,7 @@ export default function TabRoutes({ isAdmin = true }: { isAdmin?: boolean }) {
 
             <Tab.Screen
                 name="Veículos"
-                component={VehicleScreen}
+                component={VehiclesScreen}
                 options={{
                     tabBarIcon: ({ color, focused }) => (
                         <TabItem Icon={Car} color={color} focused={focused} />

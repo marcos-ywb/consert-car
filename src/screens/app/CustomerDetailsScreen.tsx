@@ -23,6 +23,8 @@ import {
     Trash2,
     Plus,
     CarFront,
+    MapPinned,
+    Map
 } from "lucide-react-native";
 
 import Button from "@/components/Button";
@@ -113,6 +115,36 @@ export default function CustomerDetailsScreen() {
 
                     <View style={styles.sectionCard}>
                         <View style={styles.sectionHeader}>
+                            <View style={styles.iconCircle}>
+                                <MapPinned size={20} color="#FFF" />
+                            </View>
+                            <Text style={styles.sectionTitle}>Endereço</Text>
+                        </View>
+
+                        <View style={styles.infoRow}>
+                            <View style={styles.infoIconBg}>
+                                <Map size={18} color="#64748B" />
+                            </View>
+                            <View style={{ flex: 1 }}>
+                                <Text style={styles.infoLabel}>
+                                    Endereço
+                                </Text>
+                                <Text style={styles.infoValue}>
+                                    {customerData.logradouro}, {customerData.numero}
+                                </Text>
+                                <Text style={styles.infoSubValue}>
+                                    {customerData.bairro} — {customerData.cidade}/{customerData.estado}
+                                </Text>
+                                <Text style={styles.infoSubValue}>CEP: {customerData.cep}</Text>
+                                {customerData.complemento && (
+                                    <Text style={styles.infoSubValue}>Ref: {customerData.complemento}</Text>
+                                )}
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={styles.sectionCard}>
+                        <View style={styles.sectionHeader}>
 
                             <View style={styles.iconCircle}>
                                 <CarFront size={20} color="#FFF" />
@@ -124,10 +156,14 @@ export default function CustomerDetailsScreen() {
                         {customerData.vehicles > 0 ? (
                             <TouchableOpacity style={styles.vehicleItem} activeOpacity={0.7}>
                                 <View style={styles.vehicleIconInfo}>
-                                    <Car size={24} color="#111827" />
+                                    <View style={styles.carIconBox}>
+                                        <Car size={24} color="#111827" />
+                                    </View>
                                     <View style={{ marginLeft: 12 }}>
-                                        <Text style={styles.vehicleModel}>Modelo do Veículo</Text>
-                                        <Text style={styles.vehiclePlate}>PLACA-1234</Text>
+                                        <Text style={styles.vehicleModel}>Honda Civic • Preto</Text>
+                                        <View style={styles.plateBadge}>
+                                            <Text style={styles.plateText}>ABC-1234</Text>
+                                        </View>
                                     </View>
                                 </View>
                                 <ChevronRight size={20} color="#CBD5E1" />
@@ -384,6 +420,37 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
 
+    infoSubValue: {
+        fontSize: 14,
+        color: "#64748B",
+        marginTop: 2,
+    },
+
+    carIconBox: {
+        width: 48,
+        height: 48,
+        borderRadius: 12,
+        backgroundColor: "#F1F5F9",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    plateBadge: {
+        backgroundColor: "#111827",
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 4,
+        marginTop: 4,
+        alignSelf: 'flex-start',
+    },
+
+    plateText: {
+        color: "#FFCC00",
+        fontSize: 12,
+        fontWeight: "800",
+        letterSpacing: 1,
+    },
+
     vehicleItem: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -451,7 +518,8 @@ const styles = StyleSheet.create({
     },
 
     fieldButtons: {
-        flexDirection: "row",
-        gap: 8
-    },
+        flexDirection: 'row',
+        gap: 12,
+        marginTop: 10,
+    }
 });

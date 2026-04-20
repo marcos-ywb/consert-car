@@ -97,7 +97,7 @@ const VEHICLES: any[] = [
     { id: "10", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "BCD-6789", ownerName: "Maria Souza" },
 ];
 
-export default function VehicleScreen() {
+export default function VehiclesScreen() {
     const { user, signOut } = useAuth();
     const navigation = useNavigation();
 
