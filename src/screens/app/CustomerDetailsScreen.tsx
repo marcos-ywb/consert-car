@@ -154,7 +154,11 @@ export default function CustomerDetailsScreen() {
                         </View>
 
                         {customerData.vehicles > 0 ? (
-                            <TouchableOpacity style={styles.vehicleItem} activeOpacity={0.7}>
+                            <TouchableOpacity
+                                style={styles.vehicleItem}
+                                activeOpacity={0.7}
+                                onPress={() => navigation.navigate("VehicleDetails" as never)}
+                            >
                                 <View style={styles.vehicleIconInfo}>
                                     <View style={styles.carIconBox}>
                                         <Car size={24} color="#111827" />
@@ -175,7 +179,11 @@ export default function CustomerDetailsScreen() {
                             </View>
                         )}
 
-                        <TouchableOpacity style={styles.addVehicleBtn} activeOpacity={0.7}>
+                        <TouchableOpacity
+                            style={styles.addVehicleBtn}
+                            activeOpacity={0.7}
+                            onPress={() => navigation.navigate("NewVehicle" as never)}
+                        >
                             <View style={styles.addVehicleContent}>
                                 <Plus size={20} color="#64748B" />
                                 <Text style={styles.addVehicleBtnText}>

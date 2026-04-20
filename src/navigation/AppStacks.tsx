@@ -15,6 +15,10 @@ import CustomerDetailsScreen from "@/screens/app/CustomerDetailsScreen";
 import NewAppointmentScreen from "@/screens/app/NewAppointmentScreen";
 import AppointmentDetailsScreen from "@/screens/app/AppointmentDetailsScreen";
 
+import NewVehicleScreen from "@/screens/app/NewVehicleScreen";
+import VehicleDetailsScreen from "@/screens/app/VehicleDetailsScreen";
+
+
 const Stack = createNativeStackNavigator();
 
 function AuthStack() {
@@ -45,6 +49,9 @@ function AppStack() {
 
             <Stack.Screen name="NewAppointment" component={NewAppointmentScreen} />
             <Stack.Screen name="AppointmentDetails" component={AppointmentDetailsScreen} />
+
+            <Stack.Screen name="NewVehicle" component={NewVehicleScreen} />
+            <Stack.Screen name="VehicleDetails" component={VehicleDetailsScreen} />
         </Stack.Navigator>
     );
 }
