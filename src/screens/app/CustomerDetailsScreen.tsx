@@ -159,7 +159,7 @@ export default function CustomerDetailsScreen() {
                         />
 
                         <Button
-                            title="Desativar!"
+                            title="Desativar"
                             variant="danger"
                             onPress={() => alert("Clicado!")}
                             icon={<Trash2 color="#FEE2E2" />}

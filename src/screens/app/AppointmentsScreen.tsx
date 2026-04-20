@@ -37,7 +37,7 @@ import {
 const STATUS = ["Todos", "Pendente", "Em Andamento", "Concluído", "Cancelado"];
 
 const APPOINTMENTS: any[] = [
-    { id: "1", clientName: "Marcos Mello", phone: "(38) 9 9999-9999", vehicle: "Honda Civic", plate: "REE-2823", dateTime: "2026-04-14:15-30", status: "Pendente" },
+    { id: "1", clientName: "Marcos Mello", phone: "(38) 9 9999-9999", vehicle: "Honda Civic", plate: "REE-2823", dateTime: "2026-04-14T15:30:27.777Z", status: "Pendente" },
     { id: "2", clientName: "João Silva", phone: "(38) 9 8888-8888", vehicle: "Toyota Corolla", plate: "ABC-1234", dateTime: "2026-04-14:15-30", status: "Em Andamento" },
     { id: "3", clientName: "Ana Clara", phone: "(38) 9 7777-7777", vehicle: "Fiat Toro", plate: "XYZ-5555", dateTime: "2026-04-14:15-30", status: "Concluído" },
     { id: "4", clientName: "Pedro Souza", phone: "(38) 9 6666-6666", vehicle: "Jeep Compass", plate: "KLT-8888", dateTime: "2026-04-14:15-30", status: "Cancelado" },

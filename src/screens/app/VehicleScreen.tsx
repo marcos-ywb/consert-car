@@ -56,7 +56,7 @@ const renderVehicle = ({ item, navigation }: any) => (
         */}
 
         <View style={styles.clientInfo}>
-            <Text style={styles.clientName}>{item.brand} {item.model}</Text>
+            <Text style={styles.clientName}>{item.brand} {item.name}</Text>
 
             <View style={styles.clientSubInfo}>
                 <CreditCard size={14} color="#64748B" />
@@ -85,16 +85,16 @@ const renderVehicle = ({ item, navigation }: any) => (
 );
 
 const VEHICLES: any[] = [
-    { id: "1", name: "Celta", brand: "GM", vehicleType: "Carro", plate: "ABC-1234" },
-    { id: "2", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "DEF-5678" },
-    { id: "3", name: "Mustang", brand: "Ford", vehicleType: "Carro", plate: "GHI-9012" },
-    { id: "4", name: "Fiesta", brand: "Ford", vehicleType: "Carro", plate: "JKL-3456" },
-    { id: "5", name: "Corsa", brand: "GM", vehicleType: "Carro", plate: "MNO-7890" },
-    { id: "6", name: "Cruze", brand: "GM", vehicleType: "Carro", plate: "PQR-0123" },
-    { id: "7", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "STU-4567" },
-    { id: "8", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "VWX-8901" },
-    { id: "9", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "YZA-2345" },
-    { id: "10", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "BCD-6789" }
+    { id: "1", name: "Celta", brand: "GM", vehicleType: "Carro", plate: "ABC-1234", ownerName: "João Silva" },
+    { id: "2", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "DEF-5678", ownerName: "Maria Souza" },
+    { id: "3", name: "Mustang", brand: "Ford", vehicleType: "Carro", plate: "GHI-9012", ownerName: "Pedro Santos" },
+    { id: "4", name: "Fiesta", brand: "Ford", vehicleType: "Carro", plate: "JKL-3456", ownerName: "Ana Oliveira" },
+    { id: "5", name: "Corsa", brand: "GM", vehicleType: "Carro", plate: "MNO-7890", ownerName: "Lucas Souza" },
+    { id: "6", name: "Cruze", brand: "GM", vehicleType: "Carro", plate: "PQR-0123", ownerName: "Maria Souza" },
+    { id: "7", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "STU-4567", ownerName: "Pedro Santos" },
+    { id: "8", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "VWX-8901", ownerName: "Ana Oliveira" },
+    { id: "9", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "YZA-2345", ownerName: "Lucas Souza" },
+    { id: "10", name: "Civic", brand: "Honda", vehicleType: "Carro", plate: "BCD-6789", ownerName: "Maria Souza" },
 ];
 
 export default function VehicleScreen() {
