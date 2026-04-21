@@ -117,6 +117,58 @@ export default function NewCustomerScreen() {
         }
     };
 
+    const checkCEP = async (cep: string) => {
+        const cleanCEP = cep.replace(/\D/g, "");
+        if (cleanCEP.length !== 8) return;
+
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
+            const data = await response.json();
+
+            if (data.erro) {
+                setErrors(prev => ({ ...prev, cep: "CEP não encontrado!" }));
+                return;
+            }
+
+            setErrors(prev => ({ ...prev, cep: undefined }));
+            setAddressData(prev => ({
+                ...prev,
+                logradouro: data.logradouro,
+                bairro: data.bairro,
+                cidade: data.localidade,
+                estado: data.uf,
+            }));
+
+        } catch (error) {
+            setErrors(prev => ({ ...prev, cep: "Erro ao conectar ao serviço." }));
+        }
+    };
+
+    const onCEPChange = (text: string) => {
+        if (errors.cep) {
+            setErrors(prev => ({ ...prev, cep: undefined }));
+        }
+
+        handleAddressChange("cep", text);
+        const cleanCEP = text.replace(/\D/g, "");
+
+        if (cleanCEP.length < 8) {
+            setAddressData(prev => ({
+                ...prev,
+                logradouro: "",
+                bairro: "",
+                cidade: "",
+                estado: "",
+            }));
+
+            return;
+        }
+
+        if (cleanCEP.length === 8) {
+            checkCEP(cleanCEP);
+        }
+    };
+
     return (
         <View style={styles.container}>
 
@@ -208,7 +260,7 @@ export default function NewCustomerScreen() {
                                         placeholder="00000-000"
                                         keyboardType="numeric"
                                         value={addressData.cep}
-                                        onChangeText={(text) => handleAddressChange("cep", text)}
+                                        onChangeText={onCEPChange}
                                         error={errors.cep}
                                     />
                                 </View>
