@@ -152,7 +152,7 @@ export default function AppointmentDetailsScreen() {
                         />
 
                         <Button
-                            title="Finalizar"
+                            title="Cancelar"
                             variant="danger"
                             onPress={() => alert("Clicado!")}
                             icon={<Trash2 color="#FEE2E2" />}

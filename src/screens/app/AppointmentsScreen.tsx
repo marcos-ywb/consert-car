@@ -9,7 +9,9 @@ import {
     Modal,
     TouchableWithoutFeedback,
     FlatList,
-    ScrollView
+    ScrollView,
+    Linking,
+    Alert
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -37,11 +39,31 @@ import {
 const STATUS = ["Todos", "Pendente", "Em Andamento", "Concluído", "Cancelado"];
 
 const APPOINTMENTS: any[] = [
-    { id: "1", clientName: "Marcos Mello", phone: "(38) 9 9999-9999", vehicle: "Honda Civic", plate: "REE-2823", dateTime: "2026-04-14T15:30:27.777Z", status: "Pendente" },
+    { id: "1", clientName: "Marcos Mello", phone: "(62) 99700-0563", vehicle: "Honda Civic", plate: "REE-2823", dateTime: "2026-04-14T15:30:27.777Z", status: "Pendente" },
     { id: "2", clientName: "João Silva", phone: "(38) 9 8888-8888", vehicle: "Toyota Corolla", plate: "ABC-1234", dateTime: "2026-04-14:15-30", status: "Em Andamento" },
     { id: "3", clientName: "Ana Clara", phone: "(38) 9 7777-7777", vehicle: "Fiat Toro", plate: "XYZ-5555", dateTime: "2026-04-14:15-30", status: "Concluído" },
     { id: "4", clientName: "Pedro Souza", phone: "(38) 9 6666-6666", vehicle: "Jeep Compass", plate: "KLT-8888", dateTime: "2026-04-14:15-30", status: "Cancelado" },
 ];
+
+const sendWhatsAppMessage = async (phone: string, clientName: string) => {
+    const cleanNumber = phone.replace(/\D/g, "");
+    const fullNumber = cleanNumber.startsWith("55") ? cleanNumber : `55${cleanNumber}`;
+    const message = encodeURIComponent(`Olá ${clientName}, tudo bem? Aqui é da Consert-Car e gostaríamos de falar sobre seu agendamento conosco!`);
+
+    const urlProtocol = `whatsapp://send?phone=${fullNumber}&text=${message}`;
+    const urlWeb = `https://wa.me/${fullNumber}?text=${message}`;
+
+    try {
+        const supported = await Linking.canOpenURL(urlProtocol);
+        if (supported) {
+            await Linking.openURL(urlProtocol);
+        } else {
+            await Linking.openURL(urlWeb);
+        }
+    } catch (error) {
+        console.error("Erro ao abrir WhatsApp", error);
+    }
+};
 
 const StatusFilter = ({ selected, onSelect }: { selected: string, onSelect: (s: string) => void }) => {
     return (
@@ -111,7 +133,10 @@ const renderAppointment = ({ item, navigation }: any) => {
                 </View>
             </View>
             <View style={styles.cardActions}>
-                <TouchableOpacity style={styles.whatsappButton}>
+                <TouchableOpacity
+                    style={styles.whatsappButton}
+                    onPress={() => sendWhatsAppMessage(item.phone, item.clientName)}
+                >
                     <MessageCircle size={18} color="#F59E0B" fill="rgba(245, 158, 11, 0.1)" />
                 </TouchableOpacity>
                 <ChevronRight size={18} color="#CBD5E1" strokeWidth={3} />
@@ -392,7 +417,8 @@ const styles = StyleSheet.create({
         borderColor: '#F1F5F9',
     },
     appointmentInfo: {
-        flex: 1
+        flex: 1,
+        marginLeft: 15
     },
     appointmentClientName: {
         fontSize: 16,
