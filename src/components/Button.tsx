@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     },
 
     dangerText: {
-        color: "#FEE2E2",
+        color: "#FFF",
     },
 
     content: {
