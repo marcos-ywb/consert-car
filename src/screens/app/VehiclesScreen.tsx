@@ -325,11 +325,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8F9FA',
     },
     indicator: {
-        width: 4,
-        height: 20,
+        width: 8,
+        height: 8,
         backgroundColor: '#FFCC00',
-        borderRadius: 2,
+        borderRadius: 4,
         marginRight: 10,
+        shadowColor: "#FFCC00",
+        shadowOpacity: 0.8,
+        shadowRadius: 5,
+        elevation: 8
     },
     sectionTitleText: {
         fontSize: 18,

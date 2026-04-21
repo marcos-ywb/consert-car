@@ -263,13 +263,12 @@ export default function HomeScreen() {
                             ))}
                     </View>
 
-                    {/* 
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Alertas do sistema</Text>
                         <AlertCard icon={<AlertCircle size={20} color="#EF4444" />} text="2 serviços com atraso crítico" color="#EF4444" />
                         <AlertCard icon={<Package size={20} color="#F97316" />} text="Estoque baixo: Filtro de óleo" color="#F97316" />
                     </View>
-                    */}
+
                 </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
@@ -382,11 +381,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8F9FA',
     },
     indicator: {
-        width: 4,
-        height: 20,
+        width: 8,
+        height: 8,
         backgroundColor: '#FFCC00',
-        borderRadius: 2,
+        borderRadius: 4,
         marginRight: 10,
+        shadowColor: "#FFCC00",
+        shadowOpacity: 0.8,
+        shadowRadius: 5,
+        elevation: 8
     },
     sectionTitleText: {
         fontSize: 18,
