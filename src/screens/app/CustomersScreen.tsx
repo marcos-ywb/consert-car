@@ -211,7 +211,7 @@ export default function CustomersScreen() {
                             <Text style={styles.resultsCount}>
                                 {countCustomers === 0
                                     ? "Nenhum cliente cadastrado"
-                                    : `Mostando ${countCustomers} cliente${countCustomers > 1 ? 's' : ''}`
+                                    : `Mostrando ${countCustomers} cliente${countCustomers > 1 ? 's' : ''}`
                                 }
                             </Text>
                         </View>
@@ -380,6 +380,7 @@ const styles = StyleSheet.create({
         padding: 15,
         marginBottom: 12,
         alignItems: 'center',
+        borderLeftWidth: 6,
         elevation: 2,
         shadowColor: "#000",
         shadowOpacity: 0.05,

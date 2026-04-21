@@ -379,6 +379,7 @@ const styles = StyleSheet.create({
         padding: 15,
         marginBottom: 12,
         alignItems: 'center',
+        borderLeftWidth: 6,
         elevation: 2,
         shadowColor: "#000",
         shadowOpacity: 0.05,
