@@ -142,63 +142,64 @@ export function validateForgetPassword(
 };
 
 export function validateNewCustomer(
-    userData: { name: string; phone: string; cpf: string },
-    vehicleData: { marca: string; modelo: string; placa: string; ano: string; cor: string },
+    userData?: { name: string; phone: string; cpf: string },
+    vehicleData?: { marca: string; modelo: string; placa: string; ano: string; cor: string },
     addressData?: { cep: string; logradouro: string; numero: string; bairro: string; cidade: string; estado: string }
 ): NewCustomerErrors {
     const errors: NewCustomerErrors = {};
 
-    if (!userData.name.trim()) errors.name = "Nome é obrigatório!";
+    if (userData) {
+        if (!userData.name?.trim()) errors.name = "Nome é obrigatório!";
 
-    const cleanPhone = userData.phone.replace(/\D/g, "");
-    if (!userData.phone.trim()) {
-        errors.phone = "Telefone é obrigatório!";
-    } else if (cleanPhone.length < 10 || cleanPhone.length > 11) {
-        errors.phone = "Telefone inválido!";
+        const cleanPhone = userData.phone?.replace(/\D/g, "") || "";
+        if (!userData.phone?.trim()) {
+            errors.phone = "Telefone é obrigatório!";
+        } else if (cleanPhone.length < 10 || cleanPhone.length > 11) {
+            errors.phone = "Telefone inválido!";
+        }
+
+        const cleanCpf = userData.cpf?.replace(/\D/g, "") || "";
+        if (!userData.cpf?.trim()) {
+            errors.cpf = "CPF é obrigatório!";
+        } else if (cleanCpf.length !== 11) {
+            errors.cpf = "CPF deve ter 11 dígitos!";
+        }
     }
 
-    const cleanCpf = userData.cpf.replace(/\D/g, "");
-    if (!userData.cpf.trim()) {
-        errors.cpf = "CPF é obrigatório!";
-    } else if (cleanCpf.length !== 11) {
-        errors.cpf = "CPF deve ter 11 dígitos!";
-    }
+    if (vehicleData) {
+        if (!vehicleData.marca?.trim()) errors.marca = "Marca é obrigatória!";
+        if (!vehicleData.modelo?.trim()) errors.modelo = "Modelo é obrigatório!";
 
-    if (!vehicleData.marca.trim()) {
-        errors.marca = "Marca é obrigatória!";
-    }
+        const placaRegex = /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/i;
+        const placaLimpa = vehicleData.placa?.replace("-", "") || "";
 
-    if (!vehicleData.modelo.trim()) {
-        errors.modelo = "Modelo é obrigatório!";
-    }
+        if (!vehicleData.placa?.trim()) {
+            errors.placa = "Placa é obrigatória!";
+        } else if (!placaRegex.test(placaLimpa)) {
+            errors.placa = "Placa inválida!";
+        }
 
-    const placaRegex = /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/i;
-    if (!vehicleData.placa.trim()) {
-        errors.placa = "Placa é obrigatória!";
-    } else if (!placaRegex.test(vehicleData.placa.replace("-", ""))) {
-        errors.placa = "Placa inválida!";
-    }
+        const anoNum = parseInt(vehicleData.ano);
+        const anoAtual = new Date().getFullYear();
+        if (!vehicleData.ano?.trim()) {
+            errors.ano = "Ano é obrigatório!";
+        } else if (isNaN(anoNum) || anoNum < 1900 || anoNum > anoAtual + 1) {
+            errors.ano = "Ano inválido!";
+        }
 
-    const anoNum = parseInt(vehicleData.ano);
-    const anoAtual = new Date().getFullYear();
-    if (!vehicleData.ano.trim()) {
-        errors.ano = "Ano é obrigatório!";
-    } else if (isNaN(anoNum) || anoNum < 1900 || anoNum > anoAtual + 1) {
-        errors.ano = "Ano inválido!";
+        if (!vehicleData.cor?.trim()) errors.cor = "Cor é obrigatória!";
     }
-
-    if (!vehicleData.cor.trim()) errors.cor = "Cor é obrigatória!";
 
     if (addressData) {
-        const cleanCep = addressData.cep.replace(/\D/g, "");
+        const cleanCep = addressData.cep?.replace(/\D/g, "") || "";
         if (!cleanCep) errors.cep = "CEP é obrigatório!";
         else if (cleanCep.length !== 8) errors.cep = "CEP inválido!";
 
-        if (!addressData.logradouro.trim()) errors.logradouro = "Rua é obrigatória!";
-        if (!addressData.numero.trim()) errors.numero = "Nº é obrigatório!";
-        if (!addressData.bairro.trim()) errors.bairro = "Bairro é obrigatório!";
-        if (!addressData.cidade.trim()) errors.cidade = "Cidade é obrigatória!";
-        if (!addressData.estado.trim() || addressData.estado.length !== 2) {
+        if (!addressData.logradouro?.trim()) errors.logradouro = "Rua é obrigatória!";
+        if (!addressData.numero?.trim()) errors.numero = "Nº é obrigatório!";
+        if (!addressData.bairro?.trim()) errors.bairro = "Bairro é obrigatório!";
+        if (!addressData.cidade?.trim()) errors.cidade = "Cidade é obrigatória!";
+        if (!addressData.estado?.trim() || addressData.estado.length !== 2) {
             errors.estado = "UF inválida!";
         }
     }
