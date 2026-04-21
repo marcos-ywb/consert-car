@@ -170,9 +170,6 @@ export default function HomeScreen() {
                     contentContainerStyle={styles.container}
                     showsVerticalScrollIndicator={false}
                 >
-                    <View style={styles.carouselWrapper}>
-                        <CustomCarousel />
-                    </View>
 
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Ações rápidas</Text>
