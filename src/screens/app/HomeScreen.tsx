@@ -35,7 +35,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
-import CustomCarousel from "@/components/CustomCarousel";
+import CustomCarousel from "@/components/MetricCard";
 import QuickAction from "@/components/QuickAction";
 import AppointmentItem from "@/components/AppointmentItem";
 import AlertCard from "@/components/AlertCard";
