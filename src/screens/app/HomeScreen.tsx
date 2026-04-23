@@ -35,7 +35,6 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
-import CustomCarousel from "@/components/MetricCard";
 import QuickAction from "@/components/QuickAction";
 import AppointmentItem from "@/components/AppointmentItem";
 import AlertCard from "@/components/AlertCard";
@@ -318,9 +317,6 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         paddingBottom: 70
-    },
-    carouselWrapper: {
-        marginBottom: 30
     },
     section: {
         marginBottom: 25
