@@ -23,12 +23,22 @@ import {
     Trash2,
     Plus,
     CarFront,
-    CreditCard
+    CreditCard,
+    Info,
+    MessageSquareText,
+    FingerprintPattern,
+    MessageCircle,
+    CalendarCheck,
+    CalendarClock,
+    Check,
+    MapPin,
+    Map
 } from "lucide-react-native";
 
 import Button from "@/components/Button";
 
-import { formatDatetime } from "@/utils/formatters";
+import { formatDatetime, formatPhone, formatPlate, formatAppointmentStatus, formatCEP } from "@/utils/formatters";
+import { COLORS } from "@/styles/theme";
 
 export default function AppointmentDetailsScreen() {
     const route = useRoute();
@@ -77,9 +87,11 @@ export default function AppointmentDetailsScreen() {
                                 <Text style={styles.idText}>#{appointmentData.id}</Text>
                             </View>
                         </View>
+                        {/* 
                         <View>
-                            <Text>{formatDatetime(appointmentData.dateTime)}</Text>
+                            <Text>Criado em: {formatDatetime(appointmentData.createdAt)}</Text>
                         </View>
+                        */}
                     </View>
 
                     <View style={styles.sectionCard}>
@@ -107,11 +119,56 @@ export default function AppointmentDetailsScreen() {
                             </View>
                             <View>
                                 <Text style={styles.infoLabel}>Telefone / WhatsApp</Text>
-                                <Text style={styles.infoValue}>{appointmentData.phone}</Text>
+                                <Text style={styles.infoValue}>{formatPhone(appointmentData.clientPhone)}</Text>
                             </View>
                         </View>
-                    </View>
 
+                        <View style={styles.separator} />
+
+                        <View style={styles.sectionHeader}>
+                            <View style={styles.iconCircle}>
+                                <User size={20} color="#FFF" />
+                            </View>
+
+                            <Text style={styles.sectionTitle}>Endereço(s)</Text>
+                        </View>
+
+                        <View style={styles.infoRow}>
+                            <View style={styles.infoIconBg}>
+                                <Map size={18} color="#64748B" />
+                            </View>
+
+                            <View style={{ flex: 1 }}>
+                                {appointmentData.enderecos && appointmentData.enderecos.length > 0 ? (
+                                    appointmentData.enderecos.map((endereco: any, index: number) => (
+                                        <View key={endereco.endereco_id} style={{ marginBottom: index < appointmentData.enderecos.length - 1 ? 16 : 0 }}>
+                                            <Text style={styles.infoLabel}>
+                                                Endereço{appointmentData.enderecos.length > 1 ? ` ${index + 1}` : ""}
+                                            </Text>
+                                            <Text style={styles.infoValue}>
+                                                {endereco.logradouro}, {endereco.numero}
+                                            </Text>
+                                            <Text style={styles.infoSubValue}>
+                                                {endereco.bairro} — {endereco.cidade}/{endereco.estado}
+                                            </Text>
+                                            <Text style={styles.infoSubValue}>CEP: {formatCEP(endereco.cep)}</Text>
+                                            {endereco.complemento && (
+                                                <Text style={styles.infoSubValue}>Ref: {endereco.complemento}</Text>
+                                            )}
+                                        </View>
+                                    ))
+                                ) : (
+                                    <Text style={styles.infoLabel}>Nenhum endereço cadastrado</Text>
+                                )}
+                            </View>
+                        </View>
+
+
+
+
+
+
+                    </View>
 
                     <View style={styles.sectionCard}>
                         <View style={styles.sectionHeader}>
@@ -128,7 +185,7 @@ export default function AppointmentDetailsScreen() {
                             </View>
                             <View>
                                 <Text style={styles.infoLabel}>Marca / Modelo</Text>
-                                <Text style={styles.infoValue}>{appointmentData.vehicle}</Text>
+                                <Text style={styles.infoValue}>{appointmentData.vehicleBrand} {appointmentData.vehicleModel}</Text>
                             </View>
                         </View>
 
@@ -138,9 +195,82 @@ export default function AppointmentDetailsScreen() {
                             </View>
                             <View>
                                 <Text style={styles.infoLabel}>Placa</Text>
-                                <Text style={styles.infoValue}>{appointmentData.plate}</Text>
+                                <Text style={styles.infoValue}>{formatPlate(appointmentData.vehiclePlate)}</Text>
                             </View>
                         </View>
+                    </View>
+
+                    <View style={styles.sectionCard}>
+                        <View style={styles.sectionHeader}>
+                            <View style={styles.iconCircle}>
+                                <Info size={20} color="#FFF" />
+                            </View>
+
+                            <Text style={styles.sectionTitle}>Dados do Agendamento</Text>
+                        </View>
+
+                        <View style={styles.infoRow}>
+                            <View style={styles.infoIconBg}>
+                                <MessageSquareText size={18} color="#64748B" />
+                            </View>
+                            <View>
+                                <Text style={styles.infoLabel}>Descrição</Text>
+                                <Text style={styles.infoValue}>{appointmentData.description}</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.infoRow}>
+                            <View style={styles.infoIconBg}>
+                                <CalendarClock size={18} color="#64748B" />
+                            </View>
+                            <View>
+                                <Text style={styles.infoLabel}>Data/Hora do Agendamento</Text>
+                                <Text style={styles.infoValue}>{formatDatetime(appointmentData.scheduledAt)}</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.separator} />
+
+                        <View style={styles.infoRow}>
+                            <View style={styles.infoIconBg}>
+                                <CalendarCheck size={18} color="#64748B" />
+                            </View>
+                            <View>
+                                <Text style={styles.infoLabel}>Data/Hora de Criação</Text>
+                                <Text style={styles.infoValue}>{formatDatetime(appointmentData.createdAt)}</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.infoRow}>
+                            <View style={styles.infoIconBg}>
+                                <User size={18} color="#64748B" />
+                            </View>
+                            <View>
+                                <Text style={styles.infoLabel}>Criado por</Text>
+                                <Text style={styles.infoValue}>{appointmentData.userName}</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.infoRow}>
+                            <View style={styles.infoIconBg}>
+                                <Check size={18} color="#64748B" />
+                            </View>
+                            <View>
+                                <Text style={styles.infoLabel}>Status</Text>
+                                <Text
+                                    style={[
+                                        styles.infoValue,
+                                        appointmentData.status === "AGENDADO" ? styles.AGENDADO
+                                            : appointmentData.status === "CANCELADO" ? styles.CANCELADO
+                                                : appointmentData.status === "CONCLUIDO" ? styles.CONCLUIDO
+                                                    : ""
+                                    ]}
+                                >
+                                    {formatAppointmentStatus(appointmentData.status)}
+                                </Text>
+                            </View>
+                        </View>
+
                     </View>
 
                     <View style={styles.fieldButtons}>
@@ -171,7 +301,7 @@ export default function AppointmentDetailsScreen() {
 
                 </ScrollView>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 
@@ -325,4 +455,28 @@ const styles = StyleSheet.create({
         gap: 8
     },
 
+    AGENDADO: {
+        color: COLORS.primary.DEFAULT
+    },
+
+    CANCELADO: {
+        color: COLORS.danger.DEFAULT
+    },
+
+    CONCLUIDO: {
+        color: COLORS.success.DEFAULT
+    },
+
+    separator: {
+        height: 1,
+        backgroundColor: '#E2E8F0',
+        marginVertical: 16,
+        width: '100%',
+    },
+
+    infoSubValue: {
+        fontSize: 14,
+        color: "#64748B",
+        marginTop: 2,
+    },
 });

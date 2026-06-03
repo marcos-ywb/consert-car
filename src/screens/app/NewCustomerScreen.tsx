@@ -24,6 +24,8 @@ import {
 import CustomInput from "@/components/CustomInput";
 import Button from "@/components/Button";
 
+import { customerService } from "@/services/customerService";
+
 export default function NewCustomerScreen() {
     const navigation = useNavigation();
 
@@ -97,7 +99,7 @@ export default function NewCustomerScreen() {
         setAddressData(prev => ({ ...prev, [field]: formattedValue }));
     };
 
-    function handleSaveCustomer() {
+    async function handleSaveCustomer() {
         setLoading(true);
 
         try {
@@ -105,17 +107,44 @@ export default function NewCustomerScreen() {
 
             if (Object.keys(validationErrors).length > 0) {
                 setErrors(validationErrors);
-
-                setTimeout(() => {
-                    setErrors({});
-                }, 2500);
-
+                setTimeout(() => setErrors({}), 2500);
                 return;
+            }
+
+            await customerService.create({
+                nome: userData.name,
+                telefone: userData.phone,
+                cpf: userData.cpf,
+                endereco: {
+                    cep: addressData.cep,
+                    logradouro: addressData.logradouro,
+                    numero: addressData.numero,
+                    bairro: addressData.bairro,
+                    cidade: addressData.cidade,
+                    estado: addressData.estado,
+                    complemento: addressData.complemento,
+                },
+                veiculo: {
+                    placa: vehicleData.placa,
+                    marca: vehicleData.marca,
+                    modelo: vehicleData.modelo,
+                    ano: vehicleData.ano,
+                    cor: vehicleData.cor,
+                },
+            });
+
+            navigation.goBack();
+
+        } catch (error: any) {
+            if (error.message.includes("409")) {
+                setErrors({ cpf: "CPF já cadastrado." });
+            } else {
+                setErrors({ name: "Erro ao salvar. Tente novamente." });
             }
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     const checkCEP = async (cep: string) => {
         const cleanCEP = cep.replace(/\D/g, "");

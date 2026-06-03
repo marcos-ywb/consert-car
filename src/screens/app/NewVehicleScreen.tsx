@@ -133,7 +133,9 @@ export default function NewVehicleScreen() {
                             <Text style={styles.avatarText}>{getInitials("Marcos Mello")}</Text>
                         </View>
                         <Text style={styles.name}>{"Marcos Mello"}</Text>
+                        {/*
                         <Text style={styles.lastVisit}>Última visita: {"25/02"}</Text>
+                        */}
                     </View>
 
 

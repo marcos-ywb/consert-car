@@ -9,29 +9,26 @@ import {
     TouchableOpacity,
     Modal,
     TouchableWithoutFeedback,
-    FlatList
+    FlatList,
+    ActivityIndicator,
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
     User,
-    CalendarPlus,
-    UserPlus,
-    Car,
     Search,
     AlertCircle,
-    Package,
     Settings,
     ShieldCheck,
     LogOut,
     Phone,
     ChevronRight,
     MessageCircle,
-    UserRoundPlus,
     MessageCircleWarning,
     X,
-    Plus
+    Plus,
+    Car,
 } from "lucide-react-native";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,40 +37,34 @@ import { useNavigation } from "@react-navigation/native";
 import DropdownItem from "@/components/DropdownItem";
 import CustomInput from "@/components/CustomInput";
 
-const renderCustomer = ({ item, navigation }: any) => (
+import { useCustomers } from "@/hooks/useCustomers";
+import { Customer } from "@/services/customerService";
+
+import { formatPhone } from "@/utils/formatters";
+
+const renderCustomer = ({ item, navigation }: { item: Customer; navigation: any }) => (
     <TouchableOpacity
-        style={[
-            styles.clientCard,
-            { borderLeftColor: "#FFCC00" }
-        ]}
+        style={[styles.clientCard, { borderLeftColor: "#FFCC00" }]}
         activeOpacity={0.7}
         onPress={() => navigation.navigate("CustomerDetails", { customerData: item })}
     >
-        {/* 
-        <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{item.name.charAt(0)}</Text>
-        </View>
-        */}
-
         <View style={styles.clientInfo}>
             <Text style={styles.clientName}>{item.name}</Text>
             <View style={styles.clientSubInfo}>
                 <Phone size={14} color="#64748B" />
-                <Text style={styles.clientPhone}>{item.phone}</Text>
+                <Text style={styles.clientPhone}>{formatPhone(item.phone)}</Text>
             </View>
             <View style={styles.clientSubInfo}>
-                {
-                    item.vehicles === 0
-                        ? <X size={14} color="#64748B" />
-                        : <Car size={14} color="#64748B" />
+                {item.vehicles === 0
+                    ? <X size={14} color="#64748B" />
+                    : <Car size={14} color="#64748B" />
                 }
                 <Text style={styles.clientVehicles}>
-                    {
-                        item.vehicles < 1
-                            ? "Nenhum veículo"
-                            : item.vehicles > 1
-                                ? `${item.vehicles} veículos`
-                                : `${item.vehicles} veículo`
+                    {item.vehicles < 1
+                        ? "Nenhum veículo"
+                        : item.vehicles > 1
+                            ? `${item.vehicles} veículos`
+                            : `${item.vehicles} veículo`
                     }
                 </Text>
             </View>
@@ -88,16 +79,6 @@ const renderCustomer = ({ item, navigation }: any) => (
     </TouchableOpacity>
 );
 
-const CLIENTS: any[] = [
-    { id: '2', name: 'Bruno Santos', phone: '(11) 98888-7777', lastVisit: '05 Nov 2023', vehicles: 1, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
-    { id: '4', name: 'Diego Ferreira', phone: '(11) 96666-5555', lastVisit: 'Pendente', vehicles: 0, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
-    { id: '5', name: 'Lucas Almeida', phone: '(11) 95555-4444', lastVisit: 'Ontem', vehicles: 2, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
-    { id: '7', name: 'Gabriel Mendes', phone: '(11) 93333-2222', lastVisit: 'Ontem', vehicles: 2, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
-    { id: '9', name: 'Igor Silva', phone: '(11) 91111-0000', lastVisit: 'Ontem', vehicles: 2, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
-    { id: '10', name: 'Joaquim Oliveira', phone: '(11) 90000-9999', lastVisit: 'Ontem', vehicles: 0, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
-    { id: '11', name: 'Kleber Nunes', phone: '(11) 88888-7777', lastVisit: 'Ontem', vehicles: 4, cep: '12345-678', logradouro: 'Rua das Flores', numero: '123', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP' },
-];
-
 export default function CustomersScreen() {
     const { user, signOut } = useAuth();
     const navigation = useNavigation();
@@ -105,24 +86,7 @@ export default function CustomersScreen() {
     const [menuVisible, setMenuVisible] = useState(false);
     const toggleMenu = () => setMenuVisible(!menuVisible);
 
-    const [searchItem, setSearchItem] = useState("");
-    const [filteredClients, setFilteredClients] = useState(CLIENTS);
-
-    const handleSearch = (text: string) => {
-        setSearchItem(text);
-
-        if (text === "") {
-            setFilteredClients(CLIENTS);
-        } else {
-            const filtered = CLIENTS.filter((client) =>
-                client.name.toLowerCase().includes(text.toLowerCase()) ||
-                client.phone.includes(text)
-            );
-            setFilteredClients(filtered);
-        }
-    };
-
-    const countCustomers = filteredClients.length;
+    const { customers, loading, error, search, setSearch } = useCustomers();
 
     return (
         <SafeAreaView
@@ -185,8 +149,8 @@ export default function CustomersScreen() {
                         <CustomInput
                             placeholder="Buscar cliente..."
                             icon={<Search color="#64748B" size={20} />}
-                            value={searchItem}
-                            onChangeText={handleSearch}
+                            value={search}
+                            onChangeText={setSearch}
                         />
                     </View>
 
@@ -200,30 +164,41 @@ export default function CustomersScreen() {
                 </View>
 
 
-                <FlatList
-                    data={filteredClients}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => renderCustomer({ item, navigation })}
-                    contentContainerStyle={[styles.listContent, { paddingBottom: 120 }]}
-                    showsVerticalScrollIndicator={false}
-                    ListHeaderComponent={
-                        <View style={styles.listHeader}>
-                            <Text style={styles.resultsCount}>
-                                {countCustomers === 0
-                                    ? "Nenhum cliente cadastrado"
-                                    : `Mostrando ${countCustomers} cliente${countCustomers > 1 ? 's' : ''}`
-                                }
-                            </Text>
-                        </View>
-                    }
-
-                    ListEmptyComponent={
-                        <View style={styles.emptyContainer}>
-                            <MessageCircleWarning size={40} color="#CBD5E1" />
-                            <Text style={styles.emptyText}>Nenhum cliente encontrado</Text>
-                        </View>
-                    }
-                />
+                {loading ? (
+                    <View style={styles.emptyContainer}>
+                        <ActivityIndicator size="large" color="#FFCC00" />
+                        <Text style={styles.emptyText}>Carregando clientes...</Text>
+                    </View>
+                ) : error ? (
+                    <View style={styles.emptyContainer}>
+                        <AlertCircle size={40} color="#EF4444" />
+                        <Text style={[styles.emptyText, { color: "#EF4444" }]}>{error}</Text>
+                    </View>
+                ) : (
+                    <FlatList
+                        data={customers}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item }) => renderCustomer({ item, navigation })}
+                        contentContainerStyle={[styles.listContent, { paddingBottom: 120 }]}
+                        showsVerticalScrollIndicator={false}
+                        ListHeaderComponent={
+                            <View style={styles.listHeader}>
+                                <Text style={styles.resultsCount}>
+                                    {customers.length === 0
+                                        ? "Nenhum cliente cadastrado"
+                                        : `Mostrando ${customers.length} cliente${customers.length > 1 ? "s" : ""}`
+                                    }
+                                </Text>
+                            </View>
+                        }
+                        ListEmptyComponent={
+                            <View style={styles.emptyContainer}>
+                                <MessageCircleWarning size={40} color="#CBD5E1" />
+                                <Text style={styles.emptyText}>Nenhum cliente encontrado</Text>
+                            </View>
+                        }
+                    />
+                )}
 
 
 

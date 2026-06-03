@@ -29,6 +29,9 @@ import {
 
 import Button from "@/components/Button";
 
+import { Veiculo } from "@/services/customerService";
+import { formatPhone, formatCEP, formatPlate } from "@/utils/formatters";
+
 const getInitials = (name: string) => {
     const parts = name.trim().split(' ');
 
@@ -89,7 +92,9 @@ export default function CustomerDetailsScreen() {
                             <Text style={styles.avatarText}>{getInitials(customerData.name)}</Text>
                         </View>
                         <Text style={styles.name}>{customerData.name}</Text>
+                        {/*
                         <Text style={styles.lastVisit}>Última visita: {customerData.lastVisit}</Text>
+                        */}
                     </View>
 
                     <View style={styles.sectionCard}>
@@ -108,7 +113,7 @@ export default function CustomerDetailsScreen() {
                             </View>
                             <View>
                                 <Text style={styles.infoLabel}>Telefone / WhatsApp</Text>
-                                <Text style={styles.infoValue}>{customerData.phone}</Text>
+                                <Text style={styles.infoValue}>{formatPhone(customerData.phone)}</Text>
                             </View>
                         </View>
                     </View>
@@ -118,29 +123,53 @@ export default function CustomerDetailsScreen() {
                             <View style={styles.iconCircle}>
                                 <MapPinned size={20} color="#FFF" />
                             </View>
-                            <Text style={styles.sectionTitle}>Endereço</Text>
+                            <Text style={styles.sectionTitle}>Endereço(s)</Text>
                         </View>
 
                         <View style={styles.infoRow}>
                             <View style={styles.infoIconBg}>
                                 <Map size={18} color="#64748B" />
                             </View>
+
                             <View style={{ flex: 1 }}>
-                                <Text style={styles.infoLabel}>
-                                    Endereço
-                                </Text>
-                                <Text style={styles.infoValue}>
-                                    {customerData.logradouro}, {customerData.numero}
-                                </Text>
-                                <Text style={styles.infoSubValue}>
-                                    {customerData.bairro} — {customerData.cidade}/{customerData.estado}
-                                </Text>
-                                <Text style={styles.infoSubValue}>CEP: {customerData.cep}</Text>
-                                {customerData.complemento && (
-                                    <Text style={styles.infoSubValue}>Ref: {customerData.complemento}</Text>
+                                {customerData.enderecos && customerData.enderecos.length > 0 ? (
+                                    customerData.enderecos.map((endereco: any, index: number) => (
+                                        <View key={endereco.endereco_id} style={{ marginBottom: index < customerData.enderecos.length - 1 ? 16 : 0 }}>
+                                            <Text style={styles.infoLabel}>
+                                                Endereço{customerData.enderecos.length > 1 ? ` ${index + 1}` : ""}
+                                            </Text>
+                                            <Text style={styles.infoValue}>
+                                                {endereco.logradouro}, {endereco.numero}
+                                            </Text>
+                                            <Text style={styles.infoSubValue}>
+                                                {endereco.bairro} — {endereco.cidade}/{endereco.estado}
+                                            </Text>
+                                            <Text style={styles.infoSubValue}>CEP: {formatCEP(endereco.cep)}</Text>
+                                            {endereco.complemento && (
+                                                <Text style={styles.infoSubValue}>Ref: {endereco.complemento}</Text>
+                                            )}
+                                        </View>
+                                    ))
+                                ) : (
+                                    <Text style={styles.infoLabel}>Nenhum endereço cadastrado</Text>
                                 )}
                             </View>
                         </View>
+
+                        <TouchableOpacity
+                            style={styles.addVehicleBtn}
+                            activeOpacity={0.7}
+                            onPress={() => navigation.navigate("NewVehicle" as never)}
+                        >
+                            <View style={styles.addVehicleContent}>
+                                <Plus size={20} color="#64748B" />
+                                <Text style={styles.addVehicleBtnText}>
+                                    Adicionar Novo Endereço
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+
+
                     </View>
 
                     <View style={styles.sectionCard}>
@@ -153,25 +182,52 @@ export default function CustomerDetailsScreen() {
                             <Text style={styles.sectionTitle}>Veículos Vinculados</Text>
                         </View>
 
-                        {customerData.vehicles > 0 ? (
-                            <TouchableOpacity
-                                style={styles.vehicleItem}
-                                activeOpacity={0.7}
-                                onPress={() => navigation.navigate("VehicleDetails" as never)}
-                            >
-                                <View style={styles.vehicleIconInfo}>
-                                    <View style={styles.carIconBox}>
-                                        <Car size={24} color="#111827" />
-                                    </View>
-                                    <View style={{ marginLeft: 12 }}>
-                                        <Text style={styles.vehicleModel}>Honda Civic • Preto</Text>
-                                        <View style={styles.plateBadge}>
-                                            <Text style={styles.plateText}>ABC-1234</Text>
+                        {customerData.veiculos && customerData.veiculos.length > 0 ? (
+                            customerData.veiculos.map((veiculo: Veiculo) => (
+                                <TouchableOpacity
+                                    key={veiculo.veiculo_id}
+                                    style={styles.vehicleItem}
+                                    activeOpacity={0.7}
+                                    onPress={() => navigation.navigate("VehicleDetails" as never)}
+                                >
+                                    <View style={styles.vehicleIconInfo}>
+                                        <View style={styles.carIconBox}>
+                                            <Car size={24} color="#111827" />
                                         </View>
+
+
+
+                                        <View style={styles.vehicleContainer}>
+                                            {/* Título principal: Marca e Modelo */}
+                                            <Text style={styles.vehicleTitle}>
+                                                {veiculo.marca} {veiculo.modelo}
+                                            </Text>
+
+                                            {/* Container para alinhar Cor e Placa */}
+                                            <View style={styles.vehicleDetailsRow}>
+                                                {/* Renderiza a cor apenas se ela existir */}
+                                                {veiculo.cor && (
+                                                    <Text style={styles.vehicleSubtitle}>
+                                                        {veiculo.cor}
+                                                    </Text>
+                                                )}
+
+                                                {/* Badge da Placa */}
+                                                <View style={styles.plateBadge}>
+                                                    <Text style={styles.plateText}>
+                                                        {formatPlate(veiculo.placa)}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        </View>
+
+
+
+
                                     </View>
-                                </View>
-                                <ChevronRight size={20} color="#CBD5E1" />
-                            </TouchableOpacity>
+                                    <ChevronRight size={20} color="#CBD5E1" />
+                                </TouchableOpacity>
+                            ))
                         ) : (
                             <View style={styles.emptyVehicleCard}>
                                 <Car size={32} color="#CBD5E1" />
@@ -443,20 +499,42 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
 
+    vehicleContainer: {
+        marginLeft: 12,
+        justifyContent: 'center',
+        flex: 1,
+    },
+    vehicleTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#1E293B',
+        marginBottom: 4,
+    },
+    vehicleDetailsRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: 8,
+    },
+    vehicleSubtitle: {
+        fontSize: 14,
+        color: '#64748B',
+        textTransform: 'capitalize',
+    },
     plateBadge: {
-        backgroundColor: "#111827",
+        backgroundColor: '#F8FAFC',
+        paddingVertical: 4,
         paddingHorizontal: 8,
-        paddingVertical: 2,
-        borderRadius: 4,
-        marginTop: 4,
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: '#E2E8F0',
         alignSelf: 'flex-start',
     },
-
     plateText: {
-        color: "#FFCC00",
         fontSize: 12,
-        fontWeight: "800",
-        letterSpacing: 1,
+        fontWeight: '700',
+        color: '#475569',
+        letterSpacing: 0.5,
     },
 
     vehicleItem: {
@@ -468,6 +546,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         borderWidth: 1,
         borderColor: '#F1F5F9',
+        marginBottom: 10
     },
 
     vehicleIconInfo: {
@@ -475,11 +554,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    vehicleModel: {
-        fontSize: 15,
-        fontWeight: '700',
-        color: '#111827',
-    },
+
 
     vehiclePlate: {
         fontSize: 13,
