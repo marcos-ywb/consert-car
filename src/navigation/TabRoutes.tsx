@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "@/screens/app/HomeScreen";
@@ -9,17 +9,29 @@ import AppointmentsScreen from "@/screens/app/AppointmentsScreen";
 import ServiceOrdersScreen from "@/screens/app/ServiceOrdersScreen";
 import AdminScreen from "@/screens/app/AdminScreen";
 
-import { Home, User, Car, FileText, CalendarDays, Shield } from "lucide-react-native";
+import { useAuth } from "@/contexts/AuthContext";
+import { canAccess } from "@/utils/permissions";
+
+import { Home, User, Car, FileText, CalendarDays, Shield, Lock } from "lucide-react-native";
 import { COLORS } from "@/styles/theme";
 import { useNavigation, useNavigationState } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
-function TabItem({ Icon, color, focused }: any) {
+function TabItem({ Icon, color, focused, locked }: any) {
     return (
         <View style={styles.container}>
-            {focused && <View style={styles.activeIndicator} />}
-            <Icon size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            {focused && !locked && < View style={styles.activeIndicator} />}
+            <Icon
+                size={22}
+                color={locked ? "#CBD5E1" : color}
+                strokeWidth={focused ? 2.5 : 2}
+            />
+            {locked && (
+                <View style={styles.lockBadge}>
+                    <Lock size={20} color="#ffffff" />
+                </View>
+            )}
         </View>
     );
 }
@@ -82,8 +94,18 @@ function CenterTabItem({ focused }: any) {
     );
 }
 
-export default function TabRoutes({ isAdmin = true }: { isAdmin?: boolean }) {
+export default function TabRoutes() {
+    const { user } = useAuth();
+    const isAdmin = user?.role === "OWNER" || user?.role === "ADMIN";
+
     const TAB_HEIGHT = 68;
+
+    const handleLockedPress = (routeName: string) => {
+        Alert.alert(
+            "Acesso restrito",
+            `Seu perfil não tem permissão para acessar ${routeName}.`
+        );
+    };
 
     return (
         <Tab.Navigator
@@ -174,9 +196,31 @@ export default function TabRoutes({ isAdmin = true }: { isAdmin?: boolean }) {
                 name="OS"
                 component={ServiceOrdersScreen}
                 options={{
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabItem Icon={FileText} color={color} focused={focused} />
-                    ),
+                    tabBarIcon: ({ color, focused }) => {
+                        const locked = !canAccess("OS", user?.role);
+                        return (
+                            <TabItem
+                                Icon={FileText}
+                                color={color}
+                                focused={focused}
+                                locked={locked}
+                            />
+                        );
+                    },
+                    tabBarButton: (props) => {
+                        const locked = !canAccess("OS", user?.role);
+                        if (!locked) return <TouchableOpacity {...(props as any)} />;
+
+                        return (
+                            <TouchableOpacity
+                                style={[props.style as any, { opacity: 0.5 }]}
+                                onPress={() => handleLockedPress("Ordens de Serviço")}
+                                activeOpacity={0.6}
+                            >
+                                {props.children}
+                            </TouchableOpacity>
+                        );
+                    },
                 }}
             />
         </Tab.Navigator>
@@ -224,5 +268,22 @@ const styles = StyleSheet.create({
     centerActive: {
         backgroundColor: COLORS.primary.DEFAULT,
         borderColor: COLORS.backgroundAlt,
+    },
+
+    lockBadge: {
+        position: "absolute",
+        top: 4,
+        right: 4,
+        width: 13,
+        height: 13,
+        borderRadius: 7,
+        justifyContent: "center",
+        alignItems: "center",
+        borderWidth: 1.5,
+        borderColor: COLORS.backgroundAlt,
+        shadowOpacity: 0.6,
+        shadowRadius: 3,
+        shadowOffset: { width: 0, height: 1 },
+        elevation: 3,
     },
 });

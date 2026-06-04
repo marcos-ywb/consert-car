@@ -29,8 +29,10 @@ import { useNavigation } from "@react-navigation/native";
 
 import MetricCard from "@/components/MetricCard";
 import DropdownItem from "@/components/DropdownItem";
+import { useRoleGuard } from "@/hooks/useRoleGuard";
 
 export default function AdminScreen() {
+    useRoleGuard("AdminScreen");
     const { user, signOut } = useAuth();
     const navigation = useNavigation();
 
