@@ -35,10 +35,12 @@ import Button from "@/components/Button";
 
 import { customerService, Customer, Veiculo } from "@/services/customerService";
 import { appointmentService } from "@/services/appointmentService";
+import { useAuth } from "@/contexts/AuthContext";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function NewAppointmentScreen() {
+    const { user } = useAuth();
     const navigation = useNavigation();
 
 
@@ -144,7 +146,7 @@ export default function NewAppointmentScreen() {
             await appointmentService.create({
                 cliente_id: selectedCliente.id,
                 veiculo_id: String(selectedVeiculo.veiculo_id),
-                usuario_id: String(1),//Futuramente pegar dados do JWT
+                usuario_id: String(user!.id),
                 data_agendada: isoDate,
                 descricao_servico: description.trim() || undefined,
             });

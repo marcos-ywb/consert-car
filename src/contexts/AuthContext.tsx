@@ -1,16 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { StorageService } from "@/services/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const BASE_URL = "http://localhost:3000";
 
 type User = {
+    id: number;
     name: string;
     email: string;
     phone: string;
+    role: string;
     mustChangePassword: boolean;
-};
-
-type UserCredentials = User & {
-    password: string;
-    role: "admin" | "user";
 };
 
 type AuthContextType = {
@@ -19,10 +18,10 @@ type AuthContextType = {
     signIn: (email: string, password: string) => Promise<{
         success: boolean;
         mustChangePassword?: boolean;
+        message?: string;
     }>;
     signOut: () => Promise<void>;
-    createUser: (name: string, email: string, phone: string) => boolean;
-    changePassword: (email: string, newPassword: string) => { success: boolean };
+    changePassword: (email: string, newPassword: string) => Promise<{ success: boolean }>;
 };
 
 const AuthContext = createContext({} as AuthContextType);
@@ -31,24 +30,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    //Mock
-    const [users, setUsers] = useState<UserCredentials[]>([
-        {
-            name: "Marcos Mello",
-            email: "admin@email.com",
-            phone: "38999999999",
-            password: "123456",
-            role: "admin",
-            mustChangePassword: true,
-        },
-    ]);
-
     useEffect(() => {
         async function loadStorageData() {
             try {
-                const storagedUser = await StorageService.getUser();
-                if (storagedUser) {
-                    setUser(storagedUser);
+                const [storedUser, storedToken] = await AsyncStorage.multiGet([
+                    "@user",
+                    "@token",
+                ]);
+
+                if (storedUser[1] && storedToken[1]) {
+                    setUser(JSON.parse(storedUser[1]));
                 }
             } catch (e) {
                 console.error(e);
@@ -60,69 +51,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     async function signIn(email: string, password: string) {
+        try {
+            const response = await fetch(`${BASE_URL}/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
-        await new Promise(resolve => setTimeout(resolve, 800));
+            const data = await response.json();
 
-        const userExists = users.find(u => u.email === email && u.password === password);
-
-        if (!userExists) return { success: false };
-
-        const { password: _, ...userWithoutPassword } = userExists;
-
-        setUser(userWithoutPassword);
-        await StorageService.saveUser(userWithoutPassword);
-
-        return {
-            success: true,
-            mustChangePassword: userExists.mustChangePassword,
-        };
-    }
-
-    function createUser(name: string, email: string, phone: string) {
-        const userExists = users.find((u) => u.email === email);
-        if (userExists) return false;
-
-        const newUser: UserCredentials = {
-            name, email, phone,
-            password: "123456",
-            role: "user",
-            mustChangePassword: true,
-        };
-
-        setUsers((prev) => [...prev, newUser]);
-        return true;
-    }
-
-    function changePassword(email: string, newPassword: string) {
-        let updated = false;
-
-        setUsers((prev) =>
-            prev.map((u) => {
-                if (u.email === email) {
-                    updated = true;
-                    return { ...u, password: newPassword, mustChangePassword: false };
-                }
-                return u;
-            })
-        );
-
-        if (updated) {
-            setUser((prev) => prev ? { ...prev, mustChangePassword: false } : prev);
-            if (user && user.email === email) {
-                StorageService.saveUser({ ...user, mustChangePassword: false });
+            if (!response.ok) {
+                return { success: false, message: data.message ?? "Credenciais inválidas." };
             }
-        }
 
-        return { success: updated };
+            await AsyncStorage.multiSet([
+                ["@token", data.token],
+                ["@user", JSON.stringify(data.user)],
+            ]);
+
+            setUser(data.user);
+
+            return {
+                success: true,
+                mustChangePassword: data.user.mustChangePassword,
+            };
+        } catch {
+            return { success: false, message: "Erro ao conectar ao servidor." };
+        }
+    }
+
+    async function changePassword(email: string, newPassword: string) {
+        try {
+            await fetch(`${BASE_URL}/auth/change-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, newPassword }),
+            });
+
+            const updatedUser = user ? { ...user, mustChangePassword: false } : null;
+            if (updatedUser) {
+                setUser(updatedUser);
+                await AsyncStorage.setItem("@user", JSON.stringify(updatedUser));
+            }
+
+            return { success: true };
+        } catch {
+            return { success: false };
+        }
     }
 
     async function signOut() {
-        await StorageService.removeUser();
+        await AsyncStorage.multiRemove(["@token", "@user", "@nav_state"]);
         setUser(null);
     }
 
     return (
-        <AuthContext.Provider value={{ user, loading, signIn, createUser, changePassword, signOut }}>
+        <AuthContext.Provider value={{ user, loading, signIn, signOut, changePassword }}>
             {children}
         </AuthContext.Provider>
     );

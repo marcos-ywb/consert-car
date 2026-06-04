@@ -30,7 +30,7 @@ export default function ChangePasswordScreen() {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<ChangePasswordErrors>({});
 
-    function handleChangePassword() {
+    async function handleChangePassword() {
         setLoading(true);
         try {
             const validationErrors = validateChangePassword(password, confirmPassword);
@@ -42,10 +42,11 @@ export default function ChangePasswordScreen() {
             }
 
             if (!user) return;
-            const result = changePassword(user.email, password);
+
+            const result = await changePassword(user.email, password);
 
             if (!result.success) {
-                alert("Não foi possível alterar a senha.");
+                alert("Não foi possível alterar a senha!");
             }
         } finally {
             setLoading(false);
