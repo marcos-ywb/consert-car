@@ -18,7 +18,7 @@ import {
 
 import { useOrders } from "@/hooks/useOrders";
 import { ServiceOrder } from "@/services/orderService";
-import { formatDatetime, formatPhone, formatPlate } from "@/utils/formatters";
+import { formatDatetime, formatPlate } from "@/utils/formatters";
 
 const STATUS_LABELS = ["TODOS", "ABERTA", "EM_ANDAMENTO", "AGUARDANDO_PECA", "FINALIZADA", "CANCELADA"];
 
@@ -40,8 +40,8 @@ const statusConfig: Record<string, { color: string; bg: string }> = {
 };
 
 const StatusFilter = ({ selected, onSelect }: { selected: string; onSelect: (s: string) => void }) => (
-    <View style={{ marginVertical: 10 }}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}>
+    <View style={styles.filterContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
             {STATUS_LABELS.map((s) => {
                 const isSelected = selected === s;
                 return (
@@ -80,7 +80,7 @@ const OSCard = ({ item, navigation }: { item: ServiceOrder; navigation: any }) =
                 <View style={styles.infoRow}>
                     <Car size={14} color="#94A3B8" />
                     <Text style={styles.osSubText}>
-                        {item.veiculoMarca} {item.veiculoModelo} • {formatPlate(item.veiculoPlaca)}
+                        {item.veiculoMarca} {item.veiculoModelo} • <Text style={styles.plateText}>{formatPlate(item.veiculoPlaca)}</Text>
                     </Text>
                 </View>
 
@@ -156,7 +156,7 @@ export default function ServiceOrdersScreen() {
                         />
                     </View>
                     <TouchableOpacity
-                        style={styles.actionBtn}
+                        style={styles.userBtn}
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate("NewOS" as never)}
                     >
@@ -164,7 +164,9 @@ export default function ServiceOrdersScreen() {
                     </TouchableOpacity>
                 </View>
 
-                <StatusFilter selected={status} onSelect={setStatus} />
+                <View style={styles.filterStatusField}>
+                    <StatusFilter selected={status} onSelect={setStatus} />
+                </View>
 
                 {loading ? (
                     <View style={styles.emptyContainer}>
@@ -233,12 +235,16 @@ const styles = StyleSheet.create({
         marginRight: 10, shadowColor: "#FFCC00", shadowOpacity: 0.8, shadowRadius: 5, elevation: 8,
     },
     sectionTitleText: { fontSize: 18, fontWeight: "700", color: "#111827" },
-    fieldSearch: { flexDirection: "row", paddingHorizontal: 20, paddingTop: 10, gap: 12 },
+    fieldSearch: { flexDirection: "row", paddingHorizontal: 20, paddingTop: 20, gap: 12 },
     inputContainer: { flex: 1 },
-    actionBtn: {
+    userBtn: {
         width: 60, height: 60, borderRadius: 8, backgroundColor: "#111827",
         justifyContent: "center", alignItems: "center", elevation: 4,
+        shadowColor: "#000", shadowOpacity: 0.1, shadowRadius: 10,
     },
+    filterStatusField: { marginVertical: 10 },
+    filterContainer: { paddingVertical: 5 },
+    scrollContent: { paddingHorizontal: 20, gap: 8 },
     filterBtn: { paddingHorizontal: 16, paddingVertical: 10, borderWidth: 1, borderRadius: 12 },
     filterBtnActive: { backgroundColor: "#FFCC00", borderColor: "#FFCC00" },
     filterBtnInactive: { backgroundColor: "#FFF", borderColor: "#E2E8F0" },
@@ -251,13 +257,14 @@ const styles = StyleSheet.create({
         shadowColor: "#000", shadowOpacity: 0.05, shadowRadius: 8,
         shadowOffset: { width: 0, height: 4 }, borderWidth: 1, borderColor: "#F1F5F9",
     },
-    osInfo: { flex: 1, marginLeft: 10 },
+    osInfo: { flex: 1, marginLeft: 15 },
     osHeaderRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 4 },
     osNumber: { fontSize: 12, fontWeight: "800", color: "#94A3B8", textTransform: "uppercase" },
     osDate: { fontSize: 12, color: "#94A3B8" },
     osCustomer: { fontSize: 16, fontWeight: "700", color: "#1E293B", marginBottom: 6 },
     infoRow: { flexDirection: "row", alignItems: "center", marginBottom: 4 },
-    osSubText: { fontSize: 13, color: "#64748B", marginLeft: 8 },
+    osSubText: { fontSize: 13, color: "#64748B", marginLeft: 6 },
+    plateText: { fontWeight: "700", color: "#475569" },
     footerRow: {
         flexDirection: "row", justifyContent: "space-between", alignItems: "center",
         marginTop: 12, paddingTop: 10, borderTopWidth: 1, borderTopColor: "#F8F9FA",
@@ -266,8 +273,8 @@ const styles = StyleSheet.create({
     statusText: { fontSize: 11, fontWeight: "800", textTransform: "uppercase" },
     osPrice: { fontSize: 15, fontWeight: "800", color: "#1E293B" },
     listContent: { paddingHorizontal: 20, paddingBottom: 120 },
-    listHeader: { marginVertical: 15 },
-    resultsCount: { fontSize: 13, color: "#94A3B8", fontWeight: "600", textTransform: "uppercase" },
+    listHeader: { marginTop: 5, marginBottom: 15 },
+    resultsCount: { fontSize: 13, color: "#94A3B8", fontWeight: "600", textTransform: "uppercase", letterSpacing: 0.5 },
     emptyContainer: { alignItems: "center", marginTop: 50, opacity: 0.5 },
     emptyText: { marginTop: 10, fontSize: 16, color: "#64748B" },
 });
