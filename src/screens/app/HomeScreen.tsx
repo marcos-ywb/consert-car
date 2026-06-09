@@ -43,7 +43,11 @@ import DropdownItem from "@/components/DropdownItem";
 import CustomInput from "@/components/CustomInput";
 import Button from "@/components/Button";
 
+import { useAppointments } from "@/hooks/useAppointments";
+import { Appointment } from "@/services/appointmentService";
+
 import { validateGeneralSearch, GeneralSearchErrors } from "@/utils/authValidation";
+import { formatDatetime } from "@/utils/formatters";
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -51,19 +55,20 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 export default function HomeScreen() {
     const { user, signOut } = useAuth();
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
 
     const [menuVisible, setMenuVisible] = useState(false);
     const toggleMenu = () => setMenuVisible(!menuVisible);
 
+
     const [isExpanded, setIsExpanded] = useState(false);
-
     const [searchQuery, setSearchQuery] = useState("");
+
     const [searchVisible, setSearchVisible] = useState(false);
-
+    /*
     const [loading, setLoading] = useState(false);
+    */
     const [errors, setErrors] = useState<GeneralSearchErrors>({});
-
     const toggleSearchInput = () => {
         setSearchVisible((prev) => {
             if (prev) setSearchQuery("");
@@ -72,7 +77,7 @@ export default function HomeScreen() {
     };
 
     function sendSearch() {
-        setLoading(true);
+        //setLoading(true);
 
         try {
             const validationErrors = validateGeneralSearch(searchQuery);
@@ -91,25 +96,18 @@ export default function HomeScreen() {
             alert(`Busca efetuada: ${searchQuery}`);
 
         } finally {
-            setLoading(false);
+            //setLoading(false);
         }
     };
 
-    const appointments = [
-        { id: 1, time: "08:30", client: "João Silva", service: "Troca de óleo", car: "Gol 2015" },
-        { id: 2, time: "10:00", client: "Carlos Souza", service: "Revisão de Freio", car: "HB20" },
-        { id: 3, time: "11:30", client: "Paulo Mendes", service: "Alinhamento", car: "Civic" },
-        { id: 4, time: "14:00", client: "Marcos Lima", service: "Troca de Pneu", car: "Corolla" },
-        { id: 5, time: "16:00", client: "Joaquim Santos", service: "Revisão de Freio", car: "Civic" },
-        { id: 6, time: "18:00", client: "Pedro Costa", service: "Revisão de Motor", car: "Civic" },
-        { id: 7, time: "20:00", client: "Fernando Oliveira", service: "Revisão de Motor", car: "Civic" },
-
-    ];
-
     const toggleExpand = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        setIsExpanded(!isExpanded);
+        if (appointments.length > 2) {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            setIsExpanded(!isExpanded);
+        }
     };
+
+    const { appointments, loading } = useAppointments();
 
     return (
         <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -187,13 +185,24 @@ export default function HomeScreen() {
                             <QuickAction
                                 icon={<Car size={24} color="#111827" />}
                                 label="Veículo"
-                                onPress={() => alert("Veículo")}
+                                onPress={() => navigation.navigate("NewCustomer" as never)}
                             />
+
                             <QuickAction
                                 icon={<Search size={24} color="#111827" />}
                                 label="Buscar"
                                 onPress={toggleSearchInput}
                             />
+
+                            <Modal
+                                visible={searchVisible}
+                                transparent={true}
+                                animationType="fade"
+                                onRequestClose={toggleSearchInput}
+                            >
+
+                            </Modal>
+
                         </View>
 
                         {searchVisible && (
@@ -203,7 +212,6 @@ export default function HomeScreen() {
                                         placeholder="Digite sua busca..."
                                         onChangeText={setSearchQuery}
                                         icon={<Search color="#64748B" size={20} />}
-                                        error={errors.search}
                                     />
                                 </View>
 
@@ -233,7 +241,7 @@ export default function HomeScreen() {
                                     {
                                         flexDirection: 'row',
                                         alignItems: 'center',
-                                        opacity: pressed ? 0.5 : 1, // Aplica opacidade apenas enquanto o dedo está na tela
+                                        opacity: pressed ? 0.5 : 1,
                                     }
                                 ]}
                             >
@@ -248,29 +256,45 @@ export default function HomeScreen() {
                             </Pressable>
                         </View>
 
-                        {appointments
-                            .slice(0, isExpanded ? appointments.length : 2)
-                            .map((item) => (
-                                <AppointmentItem
-                                    key={item.id}
-                                    time={item.time}
-                                    client={item.client}
-                                    service={item.service}
-                                    car={item.car}
-                                    onPress={() => alert(`Agendamento de ${item.client}`)}
-                                />
-                            ))}
+                        {appointments.length === 0 ? (
+                            <View style={styles.emptyContainer}>
+                                <Text style={styles.emptyText}>Nenhum agendamento para hoje cadastrado!</Text>
+                            </View>
+                        ) : (
+                            <View style={styles.listContainer}>
+                                {appointments
+                                    .slice(0, isExpanded ? appointments.length : 2)
+                                    .map((item) => (
+                                        <AppointmentItem
+                                            key={item.clientId} //mudar para agendamentoId
+                                            time={
+                                                formatDatetime(
+                                                    item.scheduledAt,
+                                                    true
+                                                )
+                                            }
+                                            client={item.clientName}
+                                            service={String(item.description)}
+                                            car={`${item.vehicleBrand} ${item.vehicleModel} (${item.vehiclePlate})`}
+                                            onPress={() => navigation.navigate("AppointmentDetails", { appointmentData: item })}
+                                        />
+                                    ))
+                                }
+                            </View>
+                        )}
                     </View>
 
+                    {/* 
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Alertas do sistema</Text>
                         <AlertCard icon={<AlertCircle size={20} color="#EF4444" />} text="2 serviços com atraso crítico" color="#EF4444" />
                         <AlertCard icon={<Package size={20} color="#F97316" />} text="Estoque baixo: Filtro de óleo" color="#F97316" />
                     </View>
+                    */}
 
                 </ScrollView>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 
@@ -319,18 +343,20 @@ const styles = StyleSheet.create({
         paddingBottom: 70
     },
     section: {
+        width: "100%",
+        alignItems: "stretch",
         marginBottom: 25
     },
     sectionHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 15
     },
     sectionTitle: {
         fontSize: 18,
         fontWeight: "700",
         color: "#111827",
-        marginBottom: 15
     },
     seeMore: {
         color: "#64748B",
@@ -338,6 +364,7 @@ const styles = StyleSheet.create({
         fontWeight: '600'
     },
     actionGrid: {
+        marginTop: 15,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -405,5 +432,24 @@ const styles = StyleSheet.create({
     buttonField: {
         paddingTop: 8,
         width: '100%',
-    }
+    },
+
+    listContainer: {
+        width: "100%",
+        alignItems: "stretch",
+        gap: 12,
+    },
+    emptyContainer: {
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 30,
+    },
+
+    emptyText: {
+        fontSize: 15,
+        fontWeight: "500",
+        color: "#64748B",
+        textAlign: "center",
+    },
 });

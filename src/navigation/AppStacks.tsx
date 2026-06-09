@@ -18,6 +18,8 @@ import AppointmentDetailsScreen from "@/screens/app/AppointmentDetailsScreen";
 import NewVehicleScreen from "@/screens/app/NewVehicleScreen";
 import VehicleDetailsScreen from "@/screens/app/VehicleDetailsScreen";
 
+import TeamScreen from "@/screens/app/TeamScreen";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +54,8 @@ function AppStack() {
 
             <Stack.Screen name="NewVehicle" component={NewVehicleScreen} />
             <Stack.Screen name="VehicleDetails" component={VehicleDetailsScreen} />
+
+            <Stack.Screen name="Team" component={TeamScreen} />
         </Stack.Navigator>
     );
 }

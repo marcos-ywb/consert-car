@@ -21,7 +21,8 @@ import {
     BarChart3,
     Users,
     Wallet,
-    ShieldAlert
+    ShieldAlert,
+    ChevronLeft
 } from "lucide-react-native";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -30,6 +31,8 @@ import { useNavigation } from "@react-navigation/native";
 import MetricCard from "@/components/MetricCard";
 import DropdownItem from "@/components/DropdownItem";
 import { useRoleGuard } from "@/hooks/useRoleGuard";
+
+import { formatRoleName } from "@/utils/formatters";
 
 export default function AdminScreen() {
     useRoleGuard("AdminScreen");
@@ -46,9 +49,21 @@ export default function AdminScreen() {
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
                 <View style={styles.header}>
+                    <TouchableOpacity
+                        style={styles.backBtn}
+                        onPress={() => navigation.navigate("Home" as never)}
+                        activeOpacity={0.7}
+                    >
+                        <ChevronLeft size={28} color="#111827" />
+                    </TouchableOpacity>
+
                     <View>
                         <Text style={styles.greeting}>Painel Administrativo</Text>
-                        <Text style={styles.username}>{user?.name || "Diretor"}</Text>
+                        <Text style={styles.username}>{user?.name || "Administrador"}</Text>
+
+                        <View style={styles.roleBadgeContainer}>
+                            <Text style={styles.roleBadgeText}>{formatRoleName(String(user?.role))}</Text>
+                        </View>
                     </View>
 
                     <TouchableOpacity style={styles.profileBtn} onPress={toggleMenu}>
@@ -103,7 +118,9 @@ export default function AdminScreen() {
                     <View style={styles.section}>
                         <Text style={styles.sectionLabel}>Gestão de Fluxo</Text>
 
-                        <TouchableOpacity style={styles.adminCard}>
+                        <TouchableOpacity
+                            style={styles.adminCard}
+                        >
                             <View style={styles.iconBox}>
                                 <BarChart3 color="#FFCC00" size={24} />
                             </View>
@@ -114,7 +131,10 @@ export default function AdminScreen() {
                             <ChevronRight color="#475569" size={20} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.adminCard}>
+                        <TouchableOpacity
+                            style={styles.adminCard}
+                            onPress={() => navigation.navigate("Team" as never)}
+                        >
                             <View style={styles.iconBox}>
                                 <Users color="#FFCC00" size={24} />
                             </View>
@@ -143,7 +163,7 @@ export default function AdminScreen() {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 
@@ -296,5 +316,30 @@ const styles = StyleSheet.create({
         color: '#F8F9FA',
         fontWeight: '700',
         fontSize: 14
-    }
+    },
+
+    roleBadgeContainer: {
+        backgroundColor: "#111827",
+        padding: 5,
+        borderRadius: 5,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 5,
+    },
+
+    roleBadgeText: {
+        color: "#FFCC00",
+        fontWeight: 800,
+        letterSpacing: 4,
+    },
+
+    backBtn: {
+        width: 45,
+        height: 45,
+        borderRadius: 12,
+        backgroundColor: 'rgba(255,255,255,0.3)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });

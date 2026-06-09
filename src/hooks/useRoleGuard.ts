@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const ALLOWED_ROLES: Record<string, string[]> = {
     AdminScreen: ["OWNER", "ADMIN"],
     ReportsScreen: ["OWNER", "ADMIN"],
+    TeamScreen: ["OWNER", "ADMIN"],
 };
 
 export function useRoleGuard(screenName: string) {

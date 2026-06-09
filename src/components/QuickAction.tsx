@@ -20,28 +20,25 @@ export default function QuickAction({
     return (
         <TouchableOpacity
             style={styles.actionTile}
+            activeOpacity={0.7}
             onPress={onPress}
         >
-            <View style={styles.iconContainer}>{icon}</View>
-            <Text style={styles.actionLabel}>{label}</Text>
+            <View>{icon}</View>
+            <Text style={styles.actionLabel} numberOfLines={1}>{label}</Text>
         </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
     actionTile: {
-        width: '23%',
-        alignItems: 'center',
-        gap: 8
-    },
-
-    iconContainer: {
-        width: '100%',
-        aspectRatio: 1,
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 14,
         backgroundColor: '#FFCC00',
-        borderRadius: 18,
-        justifyContent: 'center',
-        alignItems: 'center',
+        gap: 8,
+        borderRadius: 8,
+        aspectRatio: 1,
         elevation: 3,
         shadowColor: "#000",
         shadowOpacity: 0.1,
@@ -49,8 +46,8 @@ const styles = StyleSheet.create({
     },
 
     actionLabel: {
-        fontSize: 12,
+        fontSize: 15,
         fontWeight: '700',
         color: '#334155'
-    },
+    }
 });

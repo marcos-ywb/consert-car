@@ -369,22 +369,6 @@ const styles = StyleSheet.create({
         borderColor: '#F1F5F9',
     },
 
-    avatar: {
-        width: 52,
-        height: 52,
-        borderRadius: 16,
-        backgroundColor: '#FFCC0025',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#FFCC0040'
-    },
-
-    avatarText: {
-        fontSize: 20,
-        fontWeight: '800',
-        color: '#B48A00'
-    },
     clientInfo: {
         flex: 1,
         marginLeft: 15
