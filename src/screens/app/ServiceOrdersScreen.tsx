@@ -72,7 +72,7 @@ const OSCard = ({ item, navigation }: { item: ServiceOrder; navigation: any }) =
             <View style={styles.osInfo}>
                 <View style={styles.osHeaderRow}>
                     <Text style={styles.osNumber}>OS #{item.id}</Text>
-                    <Text style={styles.osDate}>{formatDatetime(item.dataEntrada)}</Text>
+                    <Text style={styles.osDate}>{formatDatetime(item.dataEntrada, false)}</Text>
                 </View>
 
                 <Text style={styles.osCustomer} numberOfLines={1}>{item.clienteNome}</Text>

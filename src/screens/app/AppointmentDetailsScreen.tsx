@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -6,11 +6,13 @@ import {
     ScrollView,
     TouchableOpacity,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    ActivityIndicator
 } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import { appointmentService } from "@/services/appointmentService";
 
 import {
     ChevronLeft,
@@ -44,7 +46,29 @@ export default function AppointmentDetailsScreen() {
     const route = useRoute();
     const navigation = useNavigation();
 
-    const { appointmentData } = route.params as any;
+    const { appointmentData: initialData } = route.params as any;
+
+    const isIncomplete = !initialData.clientPhone && initialData.id;
+
+    const [appointmentData, setAppointmentData] = useState(initialData);
+    const [loadingDetail, setLoadingDetail] = useState(!!isIncomplete);
+
+    useEffect(() => {
+        if (isIncomplete) {
+            appointmentService.getById(initialData.id)
+                .then(setAppointmentData)
+                .catch(() => { })
+                .finally(() => setLoadingDetail(false));
+        }
+    }, []);
+
+    if (loadingDetail) {
+        return (
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#F8F9FA" }}>
+                <ActivityIndicator size="large" color="#FFCC00" />
+            </View>
+        );
+    }
 
     return (
         <SafeAreaView
@@ -225,7 +249,9 @@ export default function AppointmentDetailsScreen() {
                             </View>
                             <View>
                                 <Text style={styles.infoLabel}>Data/Hora do Agendamento</Text>
-                                <Text style={styles.infoValue}>{formatDatetime(appointmentData.scheduledAt)}</Text>
+                                <Text style={styles.infoValue}>{
+                                    formatDatetime(appointmentData.scheduledAt, false)
+                                }</Text>
                             </View>
                         </View>
 
@@ -237,7 +263,9 @@ export default function AppointmentDetailsScreen() {
                             </View>
                             <View>
                                 <Text style={styles.infoLabel}>Data/Hora de Criação</Text>
-                                <Text style={styles.infoValue}>{formatDatetime(appointmentData.createdAt)}</Text>
+                                <Text style={styles.infoValue}>{
+                                    formatDatetime(appointmentData.createdAt, false)
+                                }</Text>
                             </View>
                         </View>
 
